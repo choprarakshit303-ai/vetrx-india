@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VetRx India v3.0 — Student Learning & Veterinary Clinical Decision-Support Aid</title>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+</head>
+<body>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 pb-24">
+
+  <!-- COMPACT STICKY TOP HEADER (Shrunk for Mobile Viewport Efficiency) -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 no-print">
+    <!-- Top Educational & Decision-Support Strip -->
+    <div class="bg-amber-950 text-amber-100 border-b border-amber-700 px-3 py-1 text-xs">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider shrink-0">STUDENT STUDY &amp; DECISION SUPPORT AID</span>
+          <span id="i18n-disclaimer-banner" class="text-xs leading-snug">
+            <strong>Educational &amp; Decision-Support Aid Only:</strong> Built for veterinary students and clinicians as a study and calculation check. Not for autonomous real-patient prescribing without physical leaflet verification. Under the IVC Act, 1984, a Registered Veterinary Practitioner retains sole responsibility.
+          </span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="pwa-offline-pill" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold">PWA OFFLINE • v3.0.0</span>
+          <div class="flex items-center rounded-lg bg-slate-900 border border-amber-700/60 p-0.5 text-xs" role="group" aria-label="UI Language Selector">
+            <button type="button" onclick="setAppLanguage('en')" id="lang-btn-en" class="px-2 py-0.5 rounded bg-teal-500 text-slate-950 font-bold">EN</button>
+            <button type="button" onclick="setAppLanguage('hi')" id="lang-btn-hi" class="px-2 py-0.5 rounded text-amber-200 hover:text-white font-semibold">हिन्दी</button>
+            <button type="button" onclick="setAppLanguage('mr')" id="lang-btn-mr" class="px-2 py-0.5 rounded text-amber-200 hover:text-white font-semibold">मराठी</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compact Main Header Row -->
+    <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 font-bold text-sm" aria-hidden="true">
+          ✚
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 id="i18n-app-title" class="text-sm sm:text-base font-bold tracking-tight text-white">VetRx India</h1>
+          <span class="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">Catalog v3.0.0</span>
+          <span class="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30" id="header-sim-mode-pill">STUDY SANDBOX</span>
+        </div>
+      </div>
+
+      <!-- Active Practitioner, Patient, Save Case & 16/16 Test Counter -->
+      <div class="flex flex-wrap items-center gap-1.5 text-xs">
+        <div id="header-practitioner-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-amber-400" id="header-reg-dot"></span>
+          <span class="font-medium text-slate-200" id="header-prac-name">Dr. A. Sample [SANDBOX]</span>
+          <span class="mono text-amber-300" id="header-prac-reg">(SAMPLE-SANDBOX-0001)</span>
+        </div>
+        <div id="header-patient-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700">
+          <span id="header-patient-summary" class="font-medium text-slate-200">Dog • 42.0 kg (IBW 32.31 kg)</span>
+        </div>
+        <button type="button" onclick="saveCurrentCaseToIndexedDb()" class="px-2.5 py-1 rounded-lg bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 font-semibold flex items-center gap-1 transition">
+          <span id="i18n-save-case-btn">💾 Save Case (IndexedDB)</span>
+        </button>
+        <button type="button" onclick="switchMainTab('tests')" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-semibold flex items-center gap-1 transition">
+          <span id="header-golden-btn-label">Golden Tests (16/16)</span>
+        </button>
+        <span id="header-live-test-pill" class="mono text-xs px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">16/16 Live</span>
+      </div>
+    </div>
+
+    <!-- Compact Scenario Selector & Collapsible 7-Stage Pipeline Bar -->
+    <div class="bg-slate-950 border-t border-slate-800 px-3 py-1.5 text-xs">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <details class="flex-1">
+          <summary class="text-xs font-semibold text-teal-300 hover:text-white flex items-center gap-1.5">
+            <span>▸ View 7-Stage Safety, Organ Scaling &amp; Statutory Gate Pipeline</span>
+          </summary>
+          <div id="pipeline-status-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 pt-2 pb-1"></div>
+        </details>
+        <div class="flex items-center gap-1.5">
+          <label for="quick-preset-select" class="text-xs text-slate-400 hidden sm:inline">Scenario:</label>
+          <select id="quick-preset-select" onchange="loadQuickPreset(this.value)" class="text-xs border border-slate-700 rounded-md px-2 py-1 bg-slate-900 font-medium text-slate-200">
+            <option value="">-- Load Golden Scenario (TC-01 to TC-16) --</option>
+            <option value="TC-02">TC-02: Obese Labrador (42 kg, BCS 8/9) — Carodyl 75mg IBW Scaling</option>
+            <option value="TC-06">TC-06: Toy Dog (3.5 kg) — Carodyl 25mg Rounding Block (-18.8%)</option>
+            <option value="TC-04">TC-04: Dairy Buffalo (500 kg) — Butalex 25mL Neck IM Split &amp; Withdrawal</option>
+            <option value="TC-01">TC-01: Neonatal Kitten (0.45 kg, K+ 2.8) — AAHA Fluid &amp; KCl 100mL Burette Clamp</option>
+            <option value="TC-03">TC-03: Canine 20 kg — Lidocaine 2% CRI Syringe Pump vs 500mL Bag</option>
+            <option value="TC-05">TC-05: Canine 15 kg Arrest — 2024 RECOVER CPR &amp; Multi-Vial Check</option>
+            <option value="TC-08">TC-08: Unapproved Species / Invalid Route Block (Cattle + Carodyl / Oxytet IV)</option>
+            <option value="TC-09">TC-09: Max Daily Dose Ceiling Block (Carprofen 4.4 mg/kg q12h = 8.8/day)</option>
+            <option value="TC-10">TC-10: Two-Phase 12h Rehydration vs 24h Maintenance Fluid Schedule</option>
+            <option value="TC-11">TC-11: Duplicate NSAID Class / NSAID + Steroid Hard Block</option>
+            <option value="TC-14">TC-14: Poultry Flock Drinking Water (mg/L) &amp; Feed (g/tonne) Dosing</option>
+            <option value="BAN-DEMO">Statutory Ban Demo: Cattle + Nimesulide (Granim-P) S.O. 5633(E)</option>
+            <option value="CAT-TOX">Species Toxicity Demo: Cat + Melonex Plus (Paracetamol)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl w-full mx-auto px-3 sm:px-4 py-4 flex-1 space-y-5">
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: DOSAGE (RESULT CARD FIRST + STEP-BY-STEP MOBILE FLOW)        -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-dosage" role="tabpanel" aria-labelledby="tab-btn-dosage" class="space-y-4">
+
+      <!-- 1. LIVE DOSE RESULT CARD SHOWN FIRST (With Details Collapsed by Default) -->
+      <div id="live-result-card-top" class="rounded-xl bg-slate-900 text-white border-2 border-teal-500/40 shadow-md p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="i18n-live-result-title" class="text-xs uppercase tracking-wider text-teal-400 font-bold">Live Dose Output &amp; Safety Gate Summary (Hidden When Blocked)</span>
+              <span id="sku-verified-pill" class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">LABEL VERIFIED</span>
+              <span id="sku-amr-pill" class="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-200 font-semibold">NSAID</span>
+              <span id="sku-schedule-pill" class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">SCHEDULE H</span>
+            </div>
+            <h2 id="calc-headline" class="text-base sm:text-xl font-bold mono text-white mt-1">—</h2>
+          </div>
+          <div class="text-right">
+            <span class="text-xs uppercase tracking-wider text-slate-400 block">Rounding Variance</span>
+            <span id="calc-variance-badge" class="mono text-xs font-bold px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">+5.5% (PASS ±10%)</span>
+          </div>
+        </div>
+
+        <!-- Statutory, Drug Interaction, Renal/Hepatic & Unit Gate Alert Box (role="alert") -->
+        <div id="statutory-gate-alerts" role="alert" aria-live="polite" class="space-y-2"></div>
+
+        <!-- Student Study Mode vs Strict Leaflet Mode Toggle + Primary Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div class="flex flex-wrap items-center gap-3 text-xs">
+            <label for="allow-unverified-study-mode" class="flex items-center gap-1.5 cursor-pointer text-amber-300 font-semibold">
+              <input type="checkbox" id="allow-unverified-study-mode" checked onchange="logUiChange('study-mode-unverified', this.checked); recalculateAll()" class="rounded text-amber-500" />
+              <span id="i18n-study-mode-toggle">Student Study Mode: Allow Unverified Reference Monographs with Warning</span>
+            </label>
+            <label for="rx-self-dispensed" class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+              <input type="checkbox" id="rx-self-dispensed" onchange="recalculateAll()" class="rounded text-teal-500" />
+              <span>In-Clinic Dispensed (Triggers Vet H1 Log)</span>
+            </label>
+            <label for="rx-no-substitution" class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+              <input type="checkbox" id="rx-no-substitution" checked onchange="recalculateAll()" class="rounded text-teal-500" />
+              <span>Rule 65(11-A) No-Substitution Lock</span>
+            </label>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btn-switch-liquid" onclick="switchToLiquidMelonex()" class="hidden px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5">
+              <span>Switch to Melonex 1.5 mg/mL Liquid</span>
+            </button>
+            <button type="button" id="btn-add-to-rx" onclick="addCurrentItemToRx()" class="px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-sm">
+              <span id="i18n-add-rx-btn">Add Verified Item to Prescription</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsed Granular Details Disclosure (<details>) -->
+        <details id="result-details-disclosure" class="pt-2 border-t border-slate-800">
+          <summary class="text-xs font-bold text-teal-300 hover:text-white flex items-center justify-between py-1">
+            <span id="i18n-collapse-details">▸ Show Pharmacokinetic, IBW/BSA &amp; Pack Supply Details</span>
+            <span class="mono text-xs text-slate-400">Tap to Expand / Collapse</span>
+          </summary>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-2.5">
+            <div class="bg-slate-800/90 p-2.5 rounded-lg border border-slate-700">
+              <div class="text-xs text-slate-400">Exact Target Dose</div>
+              <div id="calc-exact-mg" class="mono font-bold text-sm text-teal-300 mt-0.5">—</div>
+              <div id="calc-weight-used" class="text-xs text-slate-400">—</div>
+            </div>
+            <div class="bg-slate-800/90 p-2.5 rounded-lg border border-slate-700">
+              <div class="text-xs text-slate-400">Discretized Admin Dose</div>
+              <div id="calc-discretized" class="mono font-bold text-sm text-white mt-0.5">—</div>
+              <div id="calc-split-allowed" class="text-xs text-slate-400">—</div>
+            </div>
+            <div class="bg-slate-800/90 p-2.5 rounded-lg border border-slate-700">
+              <div class="text-xs text-slate-400">IM Site Split / Admin</div>
+              <div id="calc-im-split" class="mono font-bold text-sm text-amber-300 mt-0.5">—</div>
+              <div id="calc-im-note" class="text-xs text-slate-400">—</div>
+            </div>
+            <div class="bg-slate-800/90 p-2.5 rounded-lg border border-slate-700">
+              <div class="text-xs text-slate-400">Commercial Pack Supply</div>
+              <div id="calc-total-supply" class="mono font-bold text-sm text-emerald-300 mt-0.5">—</div>
+              <div id="calc-refills-note" class="text-xs text-slate-400">Refills: 0 (Default)</div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 2. STEP-BY-STEP GUIDED MOBILE STEPPER BAR -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full" role="group" aria-label="Dosage Calculator Step-by-Step Flow">
+          <button type="button" id="step-btn-1" onclick="setDosageStep(1)" class="px-3 py-2 rounded-lg bg-teal-600 text-white font-bold text-xs text-center transition">
+            <span id="i18n-step1-btn">Step 1: Patient &amp; Weight</span>
+          </button>
+          <button type="button" id="step-btn-2" onclick="setDosageStep(2)" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs text-center transition">
+            <span id="i18n-step2-btn">Step 2: Drug &amp; Regimen</span>
+          </button>
+          <button type="button" id="step-btn-3" onclick="setDosageStep(3)" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs text-center transition">
+            <span id="i18n-step3-btn">Step 3: Withdrawal &amp; Queue</span>
+          </button>
+          <button type="button" id="step-btn-all" onclick="setDosageStep('all')" class="px-3 py-2 rounded-lg bg-slate-900 text-teal-300 font-bold text-xs text-center transition">
+            <span id="i18n-step-all-btn">All Steps (Desktop View)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. STEP PANELS GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+        <!-- STEP 1 PANEL: PRACTITIONER, PBKDF2 PIN ENCRYPTION, PATIENT & WEIGHT -->
+        <div id="dosage-step-1-panel" class="lg:col-span-5 space-y-5">
+
+          <!-- Card 1: Practitioner (Sample vs Supervising Vet Sign-In) & PBKDF2 AES-GCM DPDP Gate -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center">1</span>
+                <h2 id="i18n-card1-title" class="text-sm font-bold">Practitioner Sign-In (IVC Act 1984) &amp; PBKDF2 DPDP Gate</h2>
+              </div>
+              <span id="stage1-badge" class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold">CONSENT PENDING</span>
+            </div>
+            <div class="p-4 space-y-3 text-xs">
+              <div>
+                <label for="prac-select" class="block font-semibold text-slate-700 mb-1">Sandbox Profile (Unlicensed Demo Placeholders)</label>
+                <select id="prac-select" onchange="handlePractitionerChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white text-slate-800 font-medium">
+                  <option value="prac-1">[SANDBOX DEMO] Dr. A. Sample — Unlicensed Placeholder (SAMPLE-SANDBOX-0001)</option>
+                  <option value="prac-2">[SANDBOX DEMO] Dr. B. Placeholder — Consultant Mode Test (SAMPLE-CONSULT-0002)</option>
+                  <option value="prac-3">[SANDBOX DEMO] Dr. C. Expired-Test — Lapsed Reg Gate Test (SAMPLE-EXPIRED-0003)</option>
+                </select>
+              </div>
+
+              <!-- Supervising Registered Veterinarian Sign-In -->
+              <div class="p-2.5 rounded-lg bg-teal-50/80 border border-teal-200 space-y-2">
+                <label for="custom-prac-toggle" class="flex items-center justify-between cursor-pointer">
+                  <span class="font-bold text-teal-950 text-xs">Sign In as Supervising Registered Veterinarian (Exits Sandbox Watermark)</span>
+                  <input type="checkbox" id="custom-prac-toggle" onchange="toggleCustomPractitionerMode()" class="rounded text-teal-600" />
+                </label>
+                <div id="custom-prac-fields" class="hidden space-y-2 pt-1">
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label for="custom-prac-name" class="block text-xs text-slate-700">Practitioner Full Name</label>
+                      <input type="text" id="custom-prac-name" placeholder="e.g. Dr. S. Sharma, BVSc &amp; AH" oninput="recalculateAll()" class="w-full border border-teal-300 rounded px-2 py-1 bg-white" />
+                    </div>
+                    <div>
+                      <label for="custom-prac-reg" class="block text-xs text-slate-700">State VCI / Council Reg No</label>
+                      <input type="text" id="custom-prac-reg" placeholder="e.g. HVC-XXXX / MSVC-XXXX" oninput="recalculateAll()" class="w-full border border-teal-300 rounded px-2 py-1 bg-white mono" />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label for="custom-prac-council" class="block text-xs text-slate-700">State Veterinary Council</label>
+                      <input type="text" id="custom-prac-council" value="State Veterinary Council" oninput="recalculateAll()" class="w-full border border-teal-300 rounded px-2 py-1 bg-white" />
+                    </div>
+                    <div>
+                      <label for="custom-prac-expiry" class="block text-xs text-slate-700">5-Yr Renewal Expiry Date</label>
+                      <input type="date" id="custom-prac-expiry" value="2029-12-31" onchange="recalculateAll()" class="w-full border border-teal-300 rounded px-2 py-1 bg-white mono" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="prac-role" class="block font-semibold text-slate-700 mb-1">Clinician Role (VCI Reg 32–36)</label>
+                  <select id="prac-role" onchange="logUiChange('prac-role', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white">
+                    <option value="attending">Attending Veterinarian</option>
+                    <option value="consulting">Consulting Vet (Emergency Only)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="consult-mode" class="block font-semibold text-slate-700 mb-1">Consultation Mode</label>
+                  <select id="consult-mode" onchange="logUiChange('consult-mode', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white">
+                    <option value="in_person">In-Person Clinic / Farm</option>
+                    <option value="teleconsult">Remote Teleconsultation (Best-Practice Log)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="prac-warning-box" role="alert" aria-live="assertive" class="hidden p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs"></div>
+
+              <!-- Client PII & PBKDF2 PIN-Derived AES-256-GCM Encryption (Zero Key in localStorage!) -->
+              <div class="pt-2 border-t border-slate-200 space-y-2.5">
+                <div class="flex flex-wrap items-center justify-between gap-1">
+                  <span class="font-bold text-slate-800">Owner / Caretaker PII (Rule 65(10)(b))</span>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="fillSampleOwnerForTesting()" class="px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs">Fill Sample Owner</button>
+                    <span class="mono text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200" id="dpdp-receipt-tag">CONSENT-PENDING</span>
+                  </div>
+                </div>
+
+                <!-- PBKDF2 PIN / Passphrase Input (Key Derived In-Memory; Never Saved in localStorage) -->
+                <div class="p-2.5 rounded-lg bg-indigo-50 border border-indigo-200 space-y-1.5">
+                  <div class="flex items-center justify-between gap-2">
+                    <label for="dpdp-pin-input" id="i18n-pin-label" class="font-bold text-indigo-950 text-xs">Session Encryption PIN / Passphrase (PBKDF2-SHA256)</label>
+                    <span id="dpdp-kdf-status-badge" class="mono text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">Default Sandbox PIN</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <input type="password" id="dpdp-pin-input" placeholder="Enter 4+ char PIN/Passphrase (Key never stored in localStorage)" class="flex-1 border border-indigo-300 rounded-lg px-2.5 py-1 bg-white mono text-xs" />
+                    <button type="button" onclick="applyEncryptionPin()" class="px-3 py-1 rounded-lg bg-indigo-700 hover:bg-indigo-600 text-white font-bold text-xs shrink-0">
+                      <span id="i18n-pin-apply-btn">Set Encryption PIN</span>
+                    </button>
+                  </div>
+                  <p class="text-xs text-indigo-900">
+                    Derives an in-memory <code>AES-256-GCM</code> key via WebCrypto <code>PBKDF2</code> (100,000 iterations + 16-byte random salt). No encryption key is ever written to <code>localStorage</code>.
+                  </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label for="client-name" class="block text-slate-600 mb-0.5">Owner / Farmer Full Name</label>
+                    <input type="text" id="client-name" value="" placeholder="Required for Rx signing" onchange="logUiChange('client-name', '[ENCRYPTED_PII]')" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5" />
+                  </div>
+                  <div>
+                    <label for="client-phone" class="block text-slate-600 mb-0.5">Phone (WhatsApp Ready)</label>
+                    <input type="text" id="client-phone" value="" placeholder="Optional +91..." onchange="logUiChange('client-phone', '[ENCRYPTED_PII]')" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5" />
+                  </div>
+                </div>
+                <div>
+                  <label for="client-address" class="block text-slate-600 mb-0.5">Residential / Farm Address (Mandatory for Sch H/H1/NDPS)</label>
+                  <input type="text" id="client-address" value="" placeholder="Required village / street address" onchange="logUiChange('client-address', '[ENCRYPTED_PII]')" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5" />
+                </div>
+                <label for="dpdp-consent-check" class="flex items-start gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200 cursor-pointer">
+                  <input type="checkbox" id="dpdp-consent-check" onchange="logUiChange('dpdp-consent', this.checked); recalculateAll()" class="mt-0.5 rounded text-teal-600" />
+                  <span class="text-xs text-slate-700 leading-snug">
+                    <strong>DPDP Rules 2025 (G.S.R. 846(E) dt 13 Nov 2025):</strong> Owner grants explicit itemized consent to collect Name &amp; Address for Rule 65 prescription worksheet &amp; food-safety withdrawal tracking. Encrypted via <code>PBKDF2 + AES-256-GCM</code>.
+                  </span>
+                </label>
+                <div class="p-2 rounded bg-slate-900 text-slate-300 mono text-xs truncate" id="live-aes-preview">
+                  PBKDF2-AES-256-GCM Status: Awaiting Owner PII &amp; Consent...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Patient Demographics, Heart-Girth Estimator, Renal/Hepatic & IBW/BSA -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center">2</span>
+                <h2 id="i18n-card2-title" class="text-sm font-bold">Patient, Species BCS, Heart-Girth &amp; Organ Scaling</h2>
+              </div>
+              <span id="food-animal-badge" class="text-xs px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-semibold">COMPANION ANIMAL</span>
+            </div>
+
+            <div class="p-4 space-y-3 text-xs">
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="patient-name" class="block font-semibold text-slate-700 mb-1">Patient Name / Ear Tag ID</label>
+                  <input type="text" id="patient-name" value="Bruno (Labrador #04)" onchange="handlePatientIdentityChange('patient-name', this.value)" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium" />
+                </div>
+                <div>
+                  <label for="patient-species" class="block font-semibold text-slate-700 mb-1">Species (VeNom / VetSCT)</label>
+                  <select id="patient-species" onchange="handleSpeciesChange()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold text-slate-800">
+                    <option value="dog">Dog (Canis lupus familiaris • 9-Pt BCS)</option>
+                    <option value="cat">Cat (Felis catus • 9-Pt BCS)</option>
+                    <option value="cattle">Cattle (Bos taurus/indicus • 5-Pt BCS • FOOD)</option>
+                    <option value="buffalo">Buffalo (Bubalus bubalis • 5-Pt BCS • FOOD)</option>
+                    <option value="goat">Goat (Capra hircus • 5-Pt BCS • FOOD)</option>
+                    <option value="sheep">Sheep (Ovis aries • 5-Pt BCS • FOOD)</option>
+                    <option value="poultry">Poultry Flock (Gallus gallus • Water mg/L • FOOD)</option>
+                    <option value="aqua">Aquaculture Pond (Finfish • Feed g/t • FOOD)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="patient-breed" class="block font-semibold text-slate-700 mb-1">Breed &amp; Pharmacogenetics</label>
+                  <select id="patient-breed" onchange="logUiChange('patient-breed', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white">
+                    <option value="Labrador Retriever">Labrador Retriever</option>
+                    <option value="Collie (MDR1 Risk)">Collie (MDR1 ABCB1-1Δ Risk)</option>
+                    <option value="Australian Shepherd (MDR1 Risk)">Australian Shepherd (MDR1 Risk)</option>
+                    <option value="Mudhol / Greyhound (Sighthound CYP2B11)">Mudhol / Greyhound (Sighthound CYP2B11)</option>
+                    <option value="Pug / Bulldog (Brachycephalic)">Pug / Bulldog (Brachycephalic Airway)</option>
+                    <option value="German Shepherd">German Shepherd</option>
+                    <option value="Pomeranian / Toy">Pomeranian / Toy Breed</option>
+                    <option value="Indie / Pariah">Indian Pariah / Indie</option>
+                    <option value="Domestic Shorthair Cat">Domestic Shorthair Cat</option>
+                    <option value="Persian Cat (Brachycephalic)">Persian Cat (Brachycephalic)</option>
+                    <option value="Murrah Buffalo">Murrah Buffalo</option>
+                    <option value="Sahiwal / Crossbred Cow">Sahiwal / HF Crossbred Cow</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="patient-age-stage" class="block font-semibold text-slate-700 mb-1">Age Stage (Enforced)</label>
+                  <select id="patient-age-stage" onchange="logUiChange('patient-age-stage', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white">
+                    <option value="adult">Adult</option>
+                    <option value="pediatric">Pediatric / Neonate (&lt;8 wk • Blocks FQ/NSAID)</option>
+                    <option value="geriatric">Senior / Geriatric</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="patient-repro" class="block font-semibold text-slate-700 mb-1">Reproductive State</label>
+                  <select id="patient-repro" onchange="logUiChange('patient-repro', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white">
+                    <option value="intact_neutered">Non-Pregnant / Standard</option>
+                    <option value="pregnant">Pregnant (Blocks Teratogens/Steroids/NSAIDs)</option>
+                    <option value="lactating">Lactating / Milking Dairy</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Renal (IRIS Stage) & Hepatic Adjustment Selectors -->
+              <div class="grid grid-cols-2 gap-2.5 p-2.5 rounded-xl bg-indigo-50/70 border border-indigo-200">
+                <div>
+                  <label for="patient-renal-stage" class="block font-bold text-indigo-950 mb-1">Renal Status (IRIS Stage)</label>
+                  <select id="patient-renal-stage" onchange="logUiChange('renal-stage', this.value); recalculateAll()" class="w-full border border-indigo-300 rounded-lg px-2 py-1.5 bg-white font-semibold text-slate-800">
+                    <option value="normal" selected>Normal Renal Function (Stage 0–1)</option>
+                    <option value="iris_2">IRIS Stage 2 Mild Azotemia (Blocks Aminoglycoside)</option>
+                    <option value="iris_3">IRIS Stage 3 Moderate (-50% Dose / Blocks NSAID)</option>
+                    <option value="iris_4">IRIS Stage 4 Severe (Hard Block / -50% Dose)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="patient-hepatic-stage" class="block font-bold text-indigo-950 mb-1">Hepatic Function</label>
+                  <select id="patient-hepatic-stage" onchange="logUiChange('hepatic-stage', this.value); recalculateAll()" class="w-full border border-indigo-300 rounded-lg px-2 py-1.5 bg-white font-semibold text-slate-800">
+                    <option value="normal" selected>Normal Hepatic Function</option>
+                    <option value="moderate">Moderate Hepatopathy (Caution)</option>
+                    <option value="severe">Severe Hepatic Insufficiency (-50% / Block)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Weight (Strict Non-Empty Validation), Dynamic 9-pt vs 5-pt BCS, %BF, and MCS -->
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label for="patient-bw" class="font-bold text-slate-800">Body Weight</label>
+                      <select id="patient-bw-unit" aria-label="Weight Unit" onchange="logUiChange('bw-unit', this.value); recalculateAll()" class="text-xs border border-slate-300 rounded px-1 py-0.5 bg-white font-bold text-teal-800">
+                        <option value="kg" selected>kg</option>
+                        <option value="lb">lb (÷2.205)</option>
+                      </select>
+                    </div>
+                    <input type="number" id="patient-bw" value="42.0" min="0.05" max="1500" step="0.05" onchange="handlePatientIdentityChange('patient-bw', this.value)" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm text-slate-900 bg-white" />
+                  </div>
+                  <div>
+                    <label for="patient-bcs" id="label-patient-bcs" class="block font-bold text-slate-800 mb-1">BCS (1–9 Scale)</label>
+                    <select id="patient-bcs" onchange="logUiChange('patient-bcs', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white font-semibold">
+                      <option value="1">1/9 — Emaciated</option>
+                      <option value="2">2/9 — Very Thin</option>
+                      <option value="3">3/9 — Thin (Underweight)</option>
+                      <option value="4">4/9 — Ideal (0.94–0.99×)</option>
+                      <option value="5">5/9 — Ideal Baseline (20% BF)</option>
+                      <option value="6">6/9 — Overweight (+10%)</option>
+                      <option value="7">7/9 — Heavy (+20%)</option>
+                      <option value="8" selected>8/9 — Obese (+30% • ÷1.30)</option>
+                      <option value="9">9/9 — Morbidly Obese (Open Tier)</option>
+                    </select>
+                  </div>
+                  <div id="bf-pct-container">
+                    <label for="patient-bf-pct" class="block font-semibold text-slate-700 mb-1">Est. Body Fat % (BCS 9)</label>
+                    <input type="number" id="patient-bf-pct" placeholder="Optional %" min="5" max="70" step="1" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono bg-white" />
+                  </div>
+                </div>
+
+                <!-- Muscle Condition Score (MCS) & Dosing Basis -->
+                <div id="companion-mcs-row" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <label for="patient-mcs" class="block text-slate-600 mb-0.5">Muscle Condition Score (MCS Downward Adj.)</label>
+                    <select id="patient-mcs" onchange="logUiChange('patient-mcs', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1 bg-white">
+                      <option value="0">Normal Muscle Mass (0% adj)</option>
+                      <option value="5">Mild Muscle Loss (-5% IBW adj)</option>
+                      <option value="10">Moderate Muscle Loss (-10% IBW adj)</option>
+                      <option value="15">Severe Muscle Wasting (-15% IBW adj)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="weight-basis-mode" class="block text-slate-600 mb-0.5">Dosing Weight Basis Override</label>
+                    <select id="weight-basis-mode" onchange="logUiChange('weight-basis', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2 py-1 bg-white font-semibold text-teal-800">
+                      <option value="auto" selected>Protocol Default (IBW when BCS ≥ 6)</option>
+                      <option value="ibw">Force Ideal Body Weight (IBW)</option>
+                      <option value="tbw">Force Total Body Weight (TBW)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Heart-Girth Livestock Weight Estimator -->
+                <div id="livestock-girth-estimator" class="hidden p-2.5 rounded-lg bg-amber-50 border border-amber-300 space-y-2">
+                  <div class="font-bold text-amber-950 flex items-center justify-between">
+                    <span>Tape Heart-Girth Weight Estimator (Shaeffer's / Bubaline Formula)</span>
+                    <button type="button" onclick="applyEstimatedLivestockWeight()" class="px-2 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">Apply to Patient BW</button>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <div>
+                      <label for="hg-girth-cm" class="block text-xs text-amber-900">Heart Girth (cm)</label>
+                      <input type="number" id="hg-girth-cm" value="182" min="30" max="350" oninput="updateGirthEstimatePreview()" class="w-full border border-amber-300 rounded px-2 py-1 mono font-bold bg-white" />
+                    </div>
+                    <div>
+                      <label for="hg-length-cm" class="block text-xs text-amber-900">Body Length (cm)</label>
+                      <input type="number" id="hg-length-cm" value="156" min="30" max="350" oninput="updateGirthEstimatePreview()" class="w-full border border-amber-300 rounded px-2 py-1 mono font-bold bg-white" />
+                    </div>
+                    <div>
+                      <div class="text-xs text-amber-900">Estimated BW</div>
+                      <div id="hg-estimated-kg" class="mono font-bold text-sm text-teal-900 pt-1">476.5 kg</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Computed IBW & BSA Readout Banner -->
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-center">
+                  <div class="p-2 rounded-lg bg-white border border-slate-200">
+                    <div class="text-xs uppercase font-bold text-slate-400">Computed IBW</div>
+                    <div id="readout-ibw" class="mono text-sm font-bold text-teal-700">32.31 kg</div>
+                    <div id="readout-ibw-formula" class="text-xs text-slate-500">TBW ÷ 1.30</div>
+                  </div>
+                  <div class="p-2 rounded-lg bg-white border border-slate-200">
+                    <div class="text-xs uppercase font-bold text-slate-400">BSA (on IBW)</div>
+                    <div id="readout-bsa-ibw" class="mono text-sm font-bold text-indigo-700">1.025 m²</div>
+                    <div id="readout-bsa-k" class="text-xs text-slate-500">K = 10.1 (Dog)</div>
+                  </div>
+                  <div class="p-2 rounded-lg bg-white border border-slate-200">
+                    <div class="text-xs uppercase font-bold text-slate-400">BSA (on TBW)</div>
+                    <div id="readout-bsa-tbw" class="mono text-sm font-bold text-slate-700">1.220 m²</div>
+                    <div class="text-xs text-slate-500">Unscaled m²</div>
+                  </div>
+                </div>
+                <div id="bcs-clinical-note" class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5"></div>
+              </div>
+
+              <!-- Step 1 -> Step 2 Navigation Button -->
+              <div class="flex justify-end pt-1">
+                <button type="button" onclick="setDosageStep(2)" class="px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs">
+                  Next: Step 2 (Drug &amp; Regimen) →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 & STEP 3 COLUMN -->
+        <div id="dosage-step-2-3-column" class="lg:col-span-7 space-y-5">
+
+          <!-- STEP 2 PANEL: DRUG SELECTION, PROVENANCE, FLOCK DOSING & REGIMEN -->
+          <div id="dosage-step-2-panel" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-slate-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-teal-500 text-slate-950 font-bold text-xs flex items-center justify-center">3</span>
+                <h2 id="i18n-card3-title" class="text-sm font-bold">Species-Specific SKU Dosing, Route Lock, Pack Supply &amp; Withdrawal Engine</h2>
+              </div>
+              <span class="mono text-xs text-teal-300">Catalog v3.0.0 • Honest Provenance</span>
+            </div>
+
+            <div class="p-4 space-y-4 text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                <div class="sm:col-span-4">
+                  <label for="sku-category-filter" class="block font-semibold text-slate-700 mb-1">Catalog Filter</label>
+                  <select id="sku-category-filter" onchange="populateSkuDropdown()" class="w-full border border-slate-300 rounded-lg px-2.5 py-2 bg-slate-50 font-medium">
+                    <option value="verified" selected>Verified Primary Leaflet SKUs Only (Butalex &amp; Carodyl)</option>
+                    <option value="all">All Catalog Entries (Include Study Reference Monographs &amp; Bans)</option>
+                    <option value="unverified">Unverified Reference Monographs (Leaflet Check Required)</option>
+                    <option value="banned">CDSCO Banned / Food-Chain Prohibited (Test Gate)</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-8">
+                  <label for="selected-sku-id" class="block font-semibold text-slate-700 mb-1">Select Commercial Indian Veterinary SKU / Reference Monograph</label>
+                  <select id="selected-sku-id" onchange="handleSkuSelectionChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2 bg-white font-bold text-slate-900"></select>
+                </div>
+              </div>
+
+              <!-- Active Molecule & Regulatory Metadata Strip + Source Citation & Authentic Source Vintage -->
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div>
+                    <div class="text-xs font-bold uppercase text-slate-400">UPPERCASE INN (Rule 65)</div>
+                    <div id="meta-inn" class="font-bold text-slate-900 mono mt-0.5">CARPROFEN</div>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold uppercase text-slate-400">Strength &amp; Pack</div>
+                    <div id="meta-strength" class="font-semibold text-slate-800 mt-0.5">75 mg (Strip of 6 tabs)</div>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold uppercase text-slate-400">ATCvet / SNOMED</div>
+                    <div id="meta-codes" class="mono text-slate-700 mt-0.5">QM01AE91 • SCT:387160004</div>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold uppercase text-slate-400">Allowed Species &amp; Routes</div>
+                    <div id="meta-withdrawal" class="font-medium text-slate-700 mt-0.5">dog | PO</div>
+                  </div>
+                </div>
+                <div class="pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div class="text-slate-700">
+                    <strong>Dose Provenance:</strong> <span id="meta-source-citation">Savavet Carodyl — Blueprint Verified Active Drug Dosages Table</span>
+                    <a id="meta-source-link" href="https://www.petindiaonline.com/story-details.php?ref=2595428023" target="_blank" rel="noopener noreferrer" class="ml-1 text-teal-700 underline font-semibold">[Source Reference ↗]</a>
+                  </div>
+                  <span id="meta-last-reviewed" class="mono text-xs px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-semibold">Source Vintage: Blueprint Verified Table</span>
+                </div>
+              </div>
+
+              <!-- Poultry / Aquaculture Flock Water (mg/L) & Medicated Feed (g/tonne) Calculator Panel -->
+              <div id="flock-dosing-panel" class="hidden p-3.5 rounded-xl bg-sky-50 border border-sky-300 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sky-950">Poultry Flock Drinking Water (mg/L) &amp; Aquaculture Feed (g/tonne) Mass Dosing</span>
+                  <span class="mono text-xs px-2 py-0.5 rounded bg-sky-200 text-sky-950 font-bold">FLOCK / BIOMASS MODE</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2.5">
+                  <div>
+                    <label for="flock-count" class="block font-semibold text-sky-900 mb-0.5">Flock / Pond Count (Birds/Fish)</label>
+                    <input type="number" id="flock-count" value="1000" min="1" step="50" oninput="recalculateAll()" class="w-full border border-sky-300 rounded px-2 py-1 mono font-bold bg-white" />
+                  </div>
+                  <div>
+                    <label for="flock-water-per-unit" class="block font-semibold text-sky-900 mb-0.5">Daily Water / Bird (L/day)</label>
+                    <input type="number" id="flock-water-per-unit" value="0.33" min="0.01" step="0.05" oninput="recalculateAll()" class="w-full border border-sky-300 rounded px-2 py-1 mono font-bold bg-white" />
+                  </div>
+                  <div>
+                    <div class="text-xs font-semibold text-sky-900">Total Biomass</div>
+                    <div id="flock-biomass-out" class="mono font-bold text-sm text-sky-950 pt-1">1500.0 kg</div>
+                  </div>
+                </div>
+                <div id="flock-calculation-summary" class="p-2.5 rounded bg-white border border-sky-200 mono text-xs text-sky-950 font-bold"></div>
+              </div>
+
+              <!-- Antimicrobial Stewardship (WHO HPCIA Culture & Sensitivity Gate) -->
+              <div id="amr-stewardship-box" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-300 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-rose-900">WHO Highest Priority Critically Important Antimicrobial (HPCIA / Schedule H1) Gate</span>
+                  <span class="mono text-xs px-2 py-0.5 rounded bg-rose-200 text-rose-950 font-bold">NAP-AMR 2.0 STEWARDSHIP</span>
+                </div>
+                <div>
+                  <label for="amr-cs-status" class="block font-bold text-rose-900 mb-1">Mandatory Antimicrobial Stewardship Justification</label>
+                  <select id="amr-cs-status" onchange="logUiChange('amr-cs-status', this.value); recalculateAll()" class="w-full border border-rose-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold text-slate-900">
+                    <option value="cs_confirmed" selected>Culture &amp; Sensitivity (C&amp;S) Confirmed — First-line Resistant</option>
+                    <option value="sample_collected">Sample Collected for Lab C&amp;S — Empirical Critical Initiation</option>
+                    <option value="empirical_emergency">Life-Threatening Sepsis / Acute Emergency (No Lab Reachable)</option>
+                    <option value="unjustified">Routine / First-Line Empirical Without C&amp;S (BLOCKS HPCIA)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Dosing Parameters Row + Unit-Mismatch Guard Selector -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label for="input-dose-rate" class="font-semibold text-slate-700">Dose (<span id="dose-unit-label">mg/kg</span>)</label>
+                    <select id="input-dose-unit-basis" aria-label="Dose Basis Unit" onchange="logUiChange('dose-unit-basis', this.value); recalculateAll()" class="text-xs border border-slate-300 rounded px-1 py-0.5 bg-white font-bold text-teal-800">
+                      <option value="mg/kg" selected>mg/kg</option>
+                      <option value="mg/lb">mg/lb (×2.205)</option>
+                      <option value="mcg/kg">mcg/kg (÷1000)</option>
+                    </select>
+                  </div>
+                  <input type="number" id="input-dose-rate" value="2.2" step="0.05" min="0.001" onchange="logUiChange('input-dose-rate', this.value)" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm" />
+                  <div id="dose-range-hint" class="text-xs text-slate-500 mt-0.5">Max Daily: 4.4 mg/kg/d</div>
+                </div>
+                <div>
+                  <label for="input-freq" class="block font-semibold text-slate-700 mb-1">Frequency</label>
+                  <select id="input-freq" onchange="logUiChange('input-freq', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-medium">
+                    <option value="24">Once Daily (q24h / OD)</option>
+                    <option value="12" selected>Twice Daily (q12h / BID)</option>
+                    <option value="8">Thrice Daily (q8h / TID)</option>
+                    <option value="48">Every 48 Hours (q48h)</option>
+                    <option value="once">Single Dose Only (STAT)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="input-duration-days" class="block font-semibold text-slate-700 mb-1">Duration (Days)</label>
+                  <input type="number" id="input-duration-days" value="5" min="1" max="180" step="1" onchange="logUiChange('input-duration-days', this.value)" oninput="recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm" />
+                </div>
+                <div>
+                  <label for="input-route" class="block font-semibold text-slate-700 mb-1">Administration Route</label>
+                  <select id="input-route" onchange="logUiChange('input-route', this.value); recalculateAll()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-medium">
+                    <option value="PO">PO (Oral)</option>
+                    <option value="Deep IM (Neck)">Deep IM (Neck Muscle Only)</option>
+                    <option value="IM">IM (Intramuscular)</option>
+                    <option value="SC">SC (Subcutaneous)</option>
+                    <option value="Slow IV">Slow IV (Intravenous)</option>
+                    <option value="Topical">Topical</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 10–25% Tablet Rounding Override Gate -->
+              <div id="rounding-override-panel" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-400 space-y-2">
+                <label for="rounding-override-check" class="flex items-center gap-2 font-bold text-amber-950 cursor-pointer">
+                  <input type="checkbox" id="rounding-override-check" onchange="recalculateAll()" class="rounded text-amber-600" />
+                  <span>Clinician Override for 10%–25% Tablet Rounding Variance (Requires Justification)</span>
+                </label>
+                <div>
+                  <label for="rounding-override-reason" class="block text-xs text-amber-900 mb-0.5">Mandatory Clinical Justification for Tablet Rounding Override (Min 5 chars)</label>
+                  <input type="text" id="rounding-override-reason" placeholder="e.g., Owner unable to administer liquid suspension; within therapeutic index" oninput="recalculateAll()" class="w-full border border-amber-300 rounded px-2.5 py-1.5 bg-white text-xs" />
+                </div>
+              </div>
+
+              <!-- Step 2 Navigation Buttons -->
+              <div class="flex items-center justify-between pt-1">
+                <button type="button" onclick="setDosageStep(1)" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-xs">
+                  ← Back: Step 1 (Patient)
+                </button>
+                <button type="button" onclick="setDosageStep(3)" class="px-4 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs">
+                  Next: Step 3 (Withdrawal &amp; Queue) →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3 PANEL: WITHDRAWAL SAFE-DATE CALCULATOR & ACTIVE RX QUEUE -->
+          <div id="dosage-step-3-panel" class="space-y-5">
+            <!-- INDIA FOOD-ANIMAL MILK & MEAT WITHDRAWAL SAFE-DATE CALCULATOR -->
+            <div id="withdrawal-calculator-panel" class="p-4 rounded-xl bg-amber-50 border border-amber-300 space-y-2.5 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span id="i18n-withdrawal-title" class="font-bold text-amber-950 text-xs">Mandatory Food-Safety Milk &amp; Meat Withdrawal Safe-Date Calculator (FSSAI 2025)</span>
+                <div class="flex items-center gap-1.5">
+                  <label for="withdrawal-start-dt" class="text-xs font-semibold text-amber-900">Start Dose Timestamp:</label>
+                  <input type="datetime-local" id="withdrawal-start-dt" onchange="recalculateAll()" class="border border-amber-400 rounded px-2 py-0.5 bg-white mono text-xs font-bold" />
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                <div class="p-2.5 rounded-lg bg-white border border-amber-200">
+                  <div class="text-xs uppercase font-bold text-slate-400">Final Dose Timestamp</div>
+                  <div id="wd-final-dose" class="mono font-bold text-slate-900 mt-0.5">—</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-white border border-amber-200">
+                  <div id="i18n-safe-milk-label" class="text-xs uppercase font-bold text-amber-800">Safe Milk Consumption / Sale From:</div>
+                  <div id="wd-milk-safe" class="mono font-bold text-teal-800 mt-0.5">Companion (N/A)</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-white border border-amber-200">
+                  <div id="i18n-safe-meat-label" class="text-xs uppercase font-bold text-amber-800">Safe Meat Slaughter / Sale From:</div>
+                  <div id="wd-meat-safe" class="mono font-bold text-rose-800 mt-0.5">Companion (N/A)</div>
+                </div>
+              </div>
+              <div id="wd-trilingual-note" class="text-xs text-amber-950 font-medium"></div>
+            </div>
+
+            <!-- Active Prescription Queue & Multi-Drug Interaction Checker Summary -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 id="i18n-rx-queue-title" class="text-sm font-bold text-slate-800">Active Prescription Line Items (Patient-Bound &amp; Duplicate-Class Checked)</h3>
+                  <p class="text-xs text-slate-500">Items are locked to the current patient identity; changing patient/species prompts queue reset.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="clearRxItems()" class="px-2.5 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-xs font-medium text-slate-600">
+                    <span id="i18n-clear-list-btn">Clear List</span>
+                  </button>
+                  <button type="button" onclick="switchMainTab('rx')" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5">
+                    <span id="i18n-sign-preview-btn">Sign &amp; Preview Statutory Rx</span>
+                  </button>
+                </div>
+              </div>
+              <div id="mini-rx-items-container" class="space-y-2 text-xs"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: 2024 AAHA FLUID THERAPY & DYNAMIC KCL SAFETY CLAMPING        -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-fluids" role="tabpanel" aria-labelledby="tab-btn-fluids" class="hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">2024 AAHA / AAFP Fluid Therapy Guidelines</span>
+            <h2 id="i18n-fluids-title" class="text-lg font-bold text-slate-900 mt-1">Two-Phase Compartmental Fluid Engine, 100 mL Burette Guard &amp; 15% KCl (`2 mEq/mL`) Clamping</h2>
+            <p class="text-xs text-slate-500">Separates Phase 1 (Rehydration + Maintenance) from Phase 2 (Maintenance-only when rehydrating over 12h), recommends a 100 mL burette for patients &lt;5 kg, and computes exact mL of 15% KCl (`2 mEq/mL`) to inject.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="loadQuickPreset('TC-01')" class="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold">
+              Load TC-01 (0.45 kg Neonatal Kitten K+ Conflict)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-4 text-xs">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div>
+                <label for="fluid-species" class="block font-bold text-slate-700 mb-1">Species</label>
+                <select id="fluid-species" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold">
+                  <option value="dog">Dog (Allometric 132 × BW^0.75)</option>
+                  <option value="cat" selected>Cat (Allometric 80 × BW^0.75)</option>
+                </select>
+              </div>
+              <div>
+                <label for="fluid-bw" class="block font-bold text-slate-700 mb-1">Body Weight (kg)</label>
+                <input type="number" id="fluid-bw" value="0.45" min="0.05" max="150" step="0.05" oninput="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm bg-white" />
+              </div>
+              <div>
+                <label for="fluid-lifestage" class="block font-bold text-slate-700 mb-1">Life Stage Tier</label>
+                <select id="fluid-lifestage" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold">
+                  <option value="adult">Adult (1.0× Maint)</option>
+                  <option value="pediatric" selected>Pediatric (Dog 3.0× / Cat 2.5×)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-slate-200 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">1. Resuscitation Phase (Hypovolemic Shock Bolus)</span>
+                <label for="fluid-shock-active" class="flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="fluid-shock-active" onchange="calculateFluidsAndKcl()" class="rounded text-teal-600" />
+                  <span class="font-semibold text-rose-700">Patient in Shock</span>
+                </label>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="fluid-bolus-mlkg" class="block text-slate-600 mb-0.5">Buffered Isotonic Crystalloid (mL/kg)</label>
+                  <input type="number" id="fluid-bolus-mlkg" value="10" min="5" max="30" step="1" oninput="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono" />
+                </div>
+                <div>
+                  <label for="fluid-colloid-adj" class="block text-slate-600 mb-0.5">Concurrent Colloid Co-Admin</label>
+                  <select id="fluid-colloid-adj" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white">
+                    <option value="0">None (100% Crystalloid Bolus)</option>
+                    <option value="50">With Colloids (-50% Crystalloid Volume)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-slate-200 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">2. Rehydration Phase (Interstitial Deficit)</span>
+                <span class="mono text-xs text-teal-700 font-semibold">BW(kg) × (% ÷ 100) × 1000 mL</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="fluid-dehydration-pct" class="block text-slate-600 mb-0.5">Clinical Dehydration %</label>
+                  <select id="fluid-dehydration-pct" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold">
+                    <option value="0">&lt; 5% — Euhydrated / Undetectable (0 mL)</option>
+                    <option value="5.5">5–6% — Subtle loss of skin turgor (5.5%)</option>
+                    <option value="6">6% — Mild decreased turgor (6%)</option>
+                    <option value="7">6–8% — Mild decreased turgor &amp; dry MM (7%)</option>
+                    <option value="8" selected>8% — Obvious decreased turgor / retracted globes (8%)</option>
+                    <option value="9">8–10% — Retracted globes &amp; tacky MM (9%)</option>
+                    <option value="11">10–12% — Persistent skin tent &amp; dull corneas (11%)</option>
+                    <option value="12.5">&gt; 12% — Hypovolemic shock / imminent death (12.5%)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="fluid-rehyd-hours" class="block text-slate-600 mb-0.5">Rehydration Replacement Window</label>
+                  <select id="fluid-rehyd-hours" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold">
+                    <option value="12">12 Hours (Two-Phase Schedule: Hrs 1–12 vs 13–24)</option>
+                    <option value="24" selected>24 Hours (Constant 24-Hr Combined Rate)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl border border-slate-200 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">3. Maintenance Formula &amp; Ongoing Losses</span>
+                <span class="text-xs text-slate-500">Hypotonic preferred (0.45% NaCl / Plasma-Lyte 56)</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="fluid-maint-formula" class="block text-slate-600 mb-0.5">Maintenance Formula</label>
+                  <select id="fluid-maint-formula" onchange="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white font-medium">
+                    <option value="allometric" selected>Allometric (AAHA Preferred)</option>
+                    <option value="linear">Linear (60 Dog / 40 Cat mL/kg/d)</option>
+                    <option value="rer">30 × BW(kg) + 70 mL/day</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="fluid-ongoing-loss" class="block text-slate-600 mb-0.5">Ongoing Losses (mL/day)</label>
+                  <input type="number" id="fluid-ongoing-loss" value="0" min="0" max="5000" step="10" oninput="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono" />
+                </div>
+                <div>
+                  <label for="fluid-enteral-offset" class="block text-slate-600 mb-0.5">Enteral / IV Drug Offset (mL/d)</label>
+                  <input type="number" id="fluid-enteral-offset" value="0" min="0" max="5000" step="10" oninput="calculateFluidsAndKcl()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono" />
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-950">4. KCl Sliding Scale, Container Mode &amp; 15% KCl (`2 mEq/mL`) Volume</span>
+                <span class="mono text-xs font-bold text-rose-700">Ceiling: K_max ≤ 0.5 mEq/kg/hr</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label for="fluid-serum-k" class="block text-amber-900 font-semibold mb-0.5">Measured Serum K+ (mEq/L)</label>
+                  <input type="number" id="fluid-serum-k" value="2.8" min="1.0" max="8.0" step="0.1" oninput="calculateFluidsAndKcl()" class="w-full border border-amber-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm bg-white" />
+                </div>
+                <div>
+                  <label for="fluid-kcl-bag-mode" class="block text-amber-900 font-semibold mb-0.5">Fluid Container Volume</label>
+                  <select id="fluid-kcl-bag-mode" onchange="calculateFluidsAndKcl()" class="w-full border border-amber-300 rounded-lg px-2.5 py-1.5 bg-white font-medium">
+                    <option value="burette_100" selected>100 mL Graduated Burette (Mandatory &lt;5 kg)</option>
+                    <option value="dka_250">250 mL Feline DKA / Small Bag</option>
+                    <option value="standard_1000">1000 mL (1 L) Standard Maintenance Bag</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 space-y-4">
+            <div class="bg-slate-900 text-white rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-teal-400">2024 AAHA Two-Phase Fluid Budget</span>
+                  <h3 id="fluid-total-rate-headline" class="text-xl font-bold mono mt-0.5">—</h3>
+                </div>
+                <span id="fluid-mlkghr-badge" class="mono text-xs font-bold px-2.5 py-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30">—</span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3 text-xs">
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                  <div class="text-xs text-slate-400 uppercase font-bold">Shock Bolus (15 min)</div>
+                  <div id="fluid-out-bolus" class="mono text-sm font-bold text-rose-300 mt-1">—</div>
+                  <div id="fluid-out-bolus-sub" class="text-xs text-slate-400 mt-0.5">—</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                  <div class="text-xs text-slate-400 uppercase font-bold">Rehydration Deficit</div>
+                  <div id="fluid-out-deficit" class="mono text-sm font-bold text-sky-300 mt-1">—</div>
+                  <div id="fluid-out-deficit-sub" class="text-xs text-slate-400 mt-0.5">—</div>
+                </div>
+                <div class="p-3 rounded-lg bg-slate-800 border border-slate-700">
+                  <div class="text-xs text-slate-400 uppercase font-bold">Maintenance (24h)</div>
+                  <div id="fluid-out-maint" class="mono text-sm font-bold text-emerald-300 mt-1">—</div>
+                  <div id="fluid-out-maint-sub" class="text-xs text-slate-400 mt-0.5">—</div>
+                </div>
+              </div>
+
+              <div id="fluid-two-phase-banner" class="p-3 rounded-lg bg-slate-800 border border-teal-500/40 text-xs mono text-teal-200"></div>
+
+              <div id="kcl-safety-card" role="alert" aria-live="polite" class="p-4 rounded-xl border space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold uppercase tracking-wider" id="kcl-status-title">KCl SAFETY EVALUATION</span>
+                  <span class="mono text-xs font-bold px-2 py-0.5 rounded" id="kcl-status-pill">—</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div class="p-2 rounded bg-black/20">
+                    <div class="text-xs opacity-75">Sliding Scale</div>
+                    <div id="kcl-out-scale" class="mono font-bold text-sm">—</div>
+                  </div>
+                  <div class="p-2 rounded bg-black/20">
+                    <div class="text-xs opacity-75">Unclamped K+ Rate</div>
+                    <div id="kcl-out-delivered" class="mono font-bold text-sm">—</div>
+                  </div>
+                  <div class="p-2 rounded bg-black/20">
+                    <div class="text-xs opacity-75">Patient K_max Ceiling</div>
+                    <div id="kcl-out-kmax" class="mono font-bold text-sm">—</div>
+                  </div>
+                  <div class="p-2 rounded bg-black/20">
+                    <div class="text-xs opacity-75">Max Safe Bag Conc</div>
+                    <div id="kcl-out-maxbag" class="mono font-bold text-sm text-amber-300">—</div>
+                  </div>
+                </div>
+                <div id="kcl-15pct-injection-box" class="p-2.5 rounded bg-slate-950/90 border border-teal-400/50 mono text-xs font-bold text-teal-300"></div>
+                <p id="kcl-clinical-action" class="text-xs leading-relaxed"></p>
+                <div class="p-2.5 rounded-lg bg-slate-950/80 border border-amber-400/40 text-amber-200 text-xs">
+                  <strong>Mandatory Mixing Safeguard (PrimVeterinary):</strong> Inject 15% KCl (`2 mEq/mL`) with the bag/burette inverted and <strong>invert 4 times</strong> before infusion.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: CRI, MULTI-UNIT SELECTOR, 24H HANG LIMIT & DILUTION LAB      -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-cri" role="tabpanel" aria-labelledby="tab-btn-cri" class="hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">Deterministic CRI, Multi-Unit &amp; 24-Hr Hang-Time Engine</span>
+            <h2 id="i18n-cri-title" class="text-lg font-bold text-slate-900 mt-1">Syringe Pump vs. Carrier Bag CRI (`mcg/kg/min`, `/hr`, `/day`), Max-Rate Check &amp; Dilution Lab</h2>
+            <p class="text-xs text-slate-500">Supports multi-unit CRI conversion, enforces drug-specific maximum safe rate ceilings, and caps carrier-bag preparation at the 24-hour USP sterility hang-time limit.</p>
+          </div>
+          <button type="button" onclick="loadQuickPreset('TC-03')" class="px-3 py-1.5 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-900 border border-indigo-300 text-xs font-bold">
+            Load TC-03 (20 kg Dog Lidocaine 2% CRI in 500 mL LRS)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-4 text-xs">
+            <div>
+              <label for="cri-preset" class="block font-bold text-slate-700 mb-1">Preset Clinical CRI Protocol (Source: Plumb's 10th Ed. / RECOVER 2024)</label>
+              <select id="cri-preset" onchange="applyCriPreset(this.value)" class="w-full border border-slate-300 rounded-lg px-3 py-2 bg-slate-50 font-semibold text-slate-800">
+                <option value="lido_tc03" selected>Lidocaine 2% (20 mg/mL) — 50 mcg/kg/min (Max ceiling: 80 mcg/kg/min • TC-03)</option>
+                <option value="esmolol">Esmolol (10 mg/mL) — 50 mcg/kg/min (Max ceiling: 200 mcg/kg/min)</option>
+                <option value="fentanyl">Fentanyl (0.05 mg/mL) — 5 mcg/kg/hr (Max ceiling: 0.2 mcg/kg/min)</option>
+                <option value="ketamine">Ketamine (50 mg/mL) — 10 mcg/kg/min (Max ceiling: 20 mcg/kg/min)</option>
+                <option value="dobutamine">Dobutamine (12.5 mg/mL) — 5 mcg/kg/min (Max ceiling: 20 mcg/kg/min)</option>
+                <option value="metoclopramide">Metoclopramide (5 mg/mL) — 2 mg/kg/day (Max ceiling: 2.1 mcg/kg/min • TC-15)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div>
+                <label for="cri-bw" class="block font-bold text-slate-700 mb-1">Patient BW (kg)</label>
+                <input type="number" id="cri-bw" value="20.0" min="0.1" max="800" step="0.5" oninput="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 mono font-bold text-sm" />
+              </div>
+              <div>
+                <label for="cri-rate-mcg" class="block font-bold text-slate-700 mb-1">CRI Rate Value</label>
+                <input type="number" id="cri-rate-mcg" value="50" min="0.01" max="2000" step="0.5" oninput="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 mono font-bold text-sm" />
+              </div>
+              <div>
+                <label for="cri-rate-unit" class="block font-bold text-slate-700 mb-1">CRI Rate Unit</label>
+                <select id="cri-rate-unit" onchange="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 bg-white font-semibold">
+                  <option value="mcg/kg/min" selected>mcg/kg/min</option>
+                  <option value="mcg/kg/hr">mcg/kg/hr</option>
+                  <option value="mg/kg/hr">mg/kg/hr</option>
+                  <option value="mg/kg/day">mg/kg/day</option>
+                </select>
+              </div>
+              <div>
+                <label for="cri-stock-conc" class="block font-bold text-slate-700 mb-1">Stock (mg/mL)</label>
+                <input type="number" id="cri-stock-conc" value="20" min="0.01" max="500" step="0.5" oninput="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 mono font-bold text-sm" />
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="font-bold text-slate-800">Carrier Fluid Bag Parameters (24-Hr Max Hang-Time Enforced)</div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="cri-bag-vol" class="block text-slate-600 mb-1">Fluid Bag Volume (mL)</label>
+                  <select id="cri-bag-vol" onchange="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-semibold">
+                    <option value="100">100 mL Burette / Mini-Bag</option>
+                    <option value="250">250 mL Crystalloid Bag</option>
+                    <option value="500" selected>500 mL LRS / 0.9% NaCl Bag</option>
+                    <option value="1000">1000 mL (1 L) Crystalloid Bag</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="cri-bag-rate" class="block text-slate-600 mb-1">Carrier Fluid Rate (mL/hr)</label>
+                  <input type="number" id="cri-bag-rate" value="50.0" min="1" max="1000" step="1" oninput="calculateCri()" class="w-full border border-slate-300 rounded-lg px-2.5 py-1.5 mono font-bold text-sm bg-white" />
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200 space-y-2.5">
+              <div class="font-bold text-indigo-950">Dry-Powder Reconstitution &amp; Micro-Dilution Guard Calculator</div>
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label for="reconst-mass-mg" class="block text-slate-700 mb-0.5">Active Mass (mg)</label>
+                  <input type="number" id="reconst-mass-mg" value="500" min="1" step="50" oninput="calculateReconstitution()" class="w-full border border-indigo-300 rounded px-2 py-1 mono font-bold bg-white" />
+                </div>
+                <div>
+                  <label for="reconst-diluent-ml" class="block text-slate-700 mb-0.5">Final Volume (mL)</label>
+                  <input type="number" id="reconst-diluent-ml" value="22.5" min="0.5" step="0.5" oninput="calculateReconstitution()" class="w-full border border-indigo-300 rounded px-2 py-1 mono font-bold bg-white" />
+                </div>
+                <div>
+                  <div class="text-slate-700 mb-0.5">Resulting Stock</div>
+                  <div id="reconst-result-conc" class="mono font-bold text-sm text-indigo-900 pt-1">22.22 mg/mL</div>
+                </div>
+              </div>
+              <p id="reconst-micro-note" class="text-xs text-indigo-900"></p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-teal-50/70 border border-teal-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-teal-950">Pediatric / Parvoviral Hypoglycemia 50% Dextrose Bolus</span>
+                <span class="mono text-xs font-bold text-teal-800">0.5 mL/kg diluted 1:2</span>
+              </div>
+              <p id="dextrose-bolus-output" class="mono text-xs font-bold text-teal-900"></p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6">
+            <div class="bg-slate-900 text-white rounded-xl p-5 space-y-4 h-full flex flex-col justify-between">
+              <div class="space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                  <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">CRI Deterministic Calculation</span>
+                    <h3 id="cri-headline" class="text-xl font-bold mono mt-0.5">—</h3>
+                  </div>
+                  <span id="cri-bag-duration-badge" class="mono text-xs px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold">—</span>
+                </div>
+
+                <div id="cri-guard-alerts" role="alert" aria-live="polite" class="space-y-2"></div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                  <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700">
+                    <div class="text-xs text-slate-400 uppercase font-bold">Option A: Neat Syringe Pump</div>
+                    <div id="cri-out-pump-rate" class="mono text-lg font-bold text-teal-300 mt-1">—</div>
+                    <div id="cri-out-hourly-mg" class="text-xs text-slate-300 mt-0.5">—</div>
+                  </div>
+                  <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700">
+                    <div class="text-xs text-slate-400 uppercase font-bold">Option B: Add to Carrier Bag</div>
+                    <div id="cri-out-bag-add-ml" class="mono text-lg font-bold text-amber-300 mt-1">—</div>
+                    <div id="cri-out-bag-add-mg" class="text-xs text-slate-300 mt-0.5">—</div>
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-200 space-y-1.5">
+                  <div class="text-xs font-bold uppercase tracking-wider text-amber-300">Mandatory Carrier Bag Preparation Instruction</div>
+                  <p id="cri-withdrawal-instruction" class="mono text-sm font-bold text-white"></p>
+                  <p id="cri-inject-instruction" class="mono text-xs text-amber-200"></p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700/80 text-xs text-slate-400 mono">
+                Equations: Hourly(mg/hr) = (Rate_mcg_kg_min × BW_kg × 60) ÷ 1000 | Max Bag Hang-Time = 24.0 hr
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 4: 2024 RECOVER CPR & EMERGENCY CRASH CART                      -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-cpr" role="tabpanel" aria-labelledby="tab-btn-cpr" class="hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">June 2024 RECOVER CPR Guidelines (Evidence Vintage: June 2024)</span>
+            <h2 id="i18n-cpr-title" class="text-lg font-bold text-slate-900 mt-1">All-Drug Vial Concentration Selectors, 3–5 Min Epinephrine Timer &amp; Exportable Code Sheet</h2>
+            <p class="text-xs text-slate-500">Enforces 2024 RECOVER updates: <strong>High-dose Epinephrine (0.1 mg/kg) disabled</strong>; <strong>Atropine restricted to a single early dose</strong>; dynamic vial concentration selectors for every emergency drug; and an every-3–5-min Epinephrine reminder.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="exportCprCodeSheet()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold">
+              📄 Export Code Sheet (TXT)
+            </button>
+            <button type="button" onclick="loadQuickPreset('TC-05')" class="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-900 border border-rose-300 text-xs font-bold">
+              Load TC-05 (15.0 kg Canine Arrest)
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-5 space-y-4">
+            <div class="p-4 rounded-xl bg-slate-900 text-white space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Code Blue Patient &amp; Vial Setup</span>
+                <span id="cpr-epi-reminder-badge" class="mono text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">Epi Timer: Ready</span>
+              </div>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label for="cpr-species" class="block text-slate-300 mb-1 font-semibold">Species</label>
+                  <select id="cpr-species" onchange="calculateCprTable()" class="w-full rounded-lg px-2.5 py-1.5 bg-slate-800 border border-slate-700 text-white font-bold">
+                    <option value="dog" selected>Dog (Canine)</option>
+                    <option value="cat">Cat (Feline — Blocks Lidocaine)</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="cpr-bw" class="block text-slate-300 mb-1 font-semibold">Arrest Weight (kg)</label>
+                  <input type="number" id="cpr-bw" value="15.0" min="0.1" max="120" step="0.5" oninput="calculateCprTable()" class="w-full rounded-lg px-2.5 py-1.5 bg-slate-800 border border-slate-700 text-white mono font-bold text-sm" />
+                </div>
+              </div>
+
+              <!-- Stock Vial Concentrations for All CPR Drugs -->
+              <div class="p-3 rounded-lg bg-amber-500/15 border border-amber-400/40 text-xs space-y-2">
+                <div class="font-bold text-amber-300">Crash Cart Stock Vial Concentrations (All Drugs Configurable)</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label for="cpr-epi-conc" class="block text-xs text-amber-200">Epinephrine Vial</label>
+                    <select id="cpr-epi-conc" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 mono text-white">
+                      <option value="1.0" selected>1.0 mg/mL (1:1,000)</option>
+                      <option value="0.1">0.1 mg/mL (1:10,000)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="cpr-atropine-conc" class="block text-xs text-amber-200">Atropine Vial</label>
+                    <select id="cpr-atropine-conc" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-amber-400/50 px-2 py-1 mono text-white font-bold">
+                      <option value="0.6" selected>0.6 mg/mL (India Ampoule)</option>
+                      <option value="0.54">0.54 mg/mL (Western Chart)</option>
+                      <option value="0.4">0.4 mg/mL (Vet Stock)</option>
+                      <option value="1.0">1.0 mg/mL (High-Conc)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="cpr-atropine-mgkg" class="block text-xs text-amber-200">Atropine Dose</label>
+                    <select id="cpr-atropine-mgkg" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 mono text-white">
+                      <option value="0.05" selected>0.05 mg/kg IV/IO</option>
+                      <option value="0.04">0.04 mg/kg IV/IO</option>
+                      <option value="0.054">0.054 mg/kg IV/IO</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="cpr-lido-conc" class="block text-xs text-amber-200">Lidocaine Vial</label>
+                    <select id="cpr-lido-conc" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 mono text-white">
+                      <option value="20.0" selected>20 mg/mL (2%)</option>
+                      <option value="10.0">10 mg/mL (1%)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="cpr-vaso-conc" class="block text-xs text-amber-200">Vasopressin Vial</label>
+                    <select id="cpr-vaso-conc" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 mono text-white">
+                      <option value="20.0" selected>20 U/mL</option>
+                      <option value="40.0">40 U/mL</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="cpr-amio-conc" class="block text-xs text-amber-200">Amiodarone Vial</label>
+                    <select id="cpr-amio-conc" onchange="calculateCprTable()" class="w-full rounded bg-slate-900 border border-slate-700 px-2 py-1 mono text-white">
+                      <option value="50.0" selected>50 mg/mL</option>
+                      <option value="30.0">30 mg/mL</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-800 border border-slate-700 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="text-xs uppercase font-bold text-slate-400">2-Minute BLS Compression Cycle</div>
+                    <div id="cpr-timer-display" class="mono text-2xl font-extrabold text-white">02:00</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs uppercase font-bold text-slate-400">Cycle #</div>
+                    <div id="cpr-cycle-count" class="mono text-xl font-bold text-teal-400">1</div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" onclick="toggleCprTimer()" id="btn-cpr-timer" class="flex-1 px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5">
+                    <span id="btn-cpr-timer-text">Start 2-Min BLS Cycle</span>
+                  </button>
+                  <button type="button" onclick="toggleCprMetronome()" id="btn-cpr-metronome" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold text-xs flex items-center gap-1.5">
+                    <span id="btn-cpr-metro-text">110 BPM Beep: OFF</span>
+                  </button>
+                  <button type="button" onclick="resetCprCode()" class="px-2.5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs">Reset</button>
+                </div>
+                <div class="text-xs text-slate-300 space-y-1 border-t border-slate-700 pt-2">
+                  <div>• <strong>Compressions:</strong> 100–120/min (50:50 duty cycle), 1/3–1/2 lateral chest width (25% dorsal).</div>
+                  <div>• <strong>Ventilation:</strong> Intubated: 10 breaths/min @ <span id="cpr-tidal-vol" class="mono font-bold text-teal-300">150 mL</span> (10 mL/kg, 1s inspiratory).</div>
+                  <div>• <strong>Epinephrine Every 3–5 Min:</strong> Administer every other 2-min BLS cycle; timer alerts at 3 min elapsed.</div>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-300">Timestamped CPR Code Log</span>
+                  <span id="atropine-lock-indicator" class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Atropine Ready (1 Dose Max)</span>
+                </div>
+                <div id="cpr-event-log" class="h-32 overflow-y-auto rounded-lg bg-slate-950 p-2.5 mono text-xs text-slate-300 space-y-1 border border-slate-800">
+                  <div class="text-slate-500">[READY] Select patient weight and log ALS interventions below.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7">
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-900 text-white">
+                    <th class="p-3 font-bold">Agent / Defibrillation</th>
+                    <th class="p-3 font-bold">2024 RECOVER Dose</th>
+                    <th class="p-3 font-bold">Stock Conc</th>
+                    <th class="p-3 font-bold">Calculated Dose &amp; Vol</th>
+                    <th class="p-3 font-bold">Guardrail &amp; Action</th>
+                  </tr>
+                </thead>
+                <tbody id="cpr-dosing-tbody" class="divide-y divide-slate-200 bg-white"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 5: INDIAN SKU CATALOG, CHANGELOG, GAZETTE & ADR LOG             -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-catalog" role="tabpanel" aria-labelledby="tab-btn-catalog" class="hidden space-y-6">
+
+      <!-- Catalog Version & Changelog Card -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">Versioned Formulary Schema (`catalogVersion: 3.0.0`)</span>
+            <h2 id="i18n-changelog-title" class="text-base font-bold text-slate-900 mt-1">Catalog Version &amp; Provenance Changelog (`v3.0.0`)</h2>
+          </div>
+          <span class="mono text-xs text-slate-500">Strict Primary-Source Provenance</span>
+        </div>
+        <div id="catalog-changelog-list" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
+      </div>
+
+      <!-- Verified Gazette Citations & Legal Distinctions Table -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-800 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">Primary Legal Authority &amp; Regulatory Clarifications</span>
+            <h2 class="text-base font-bold text-slate-900 mt-1">Statutory Gazette Notifications, Rule 65 Chemist vs. Vet Duties &amp; NDPS Opioids</h2>
+          </div>
+          <span class="mono text-xs text-slate-500">Gazette Sources: 2008–2025</span>
+        </div>
+        <div id="legal-clarifications-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-900 text-white">
+                <th class="p-2.5 font-bold">Gazette Notification No.</th>
+                <th class="p-2.5 font-bold">Publication / Effective Date</th>
+                <th class="p-2.5 font-bold">Statutory Authority</th>
+                <th class="p-2.5 font-bold">Legal Scope &amp; Software Enforcement</th>
+              </tr>
+            </thead>
+            <tbody id="gazette-citations-tbody" class="divide-y divide-slate-200 bg-white"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Commercial Indian SKU Catalog with CSV/JSON Import -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">Separated JSON Formulary (`data/drug_catalog.json`)</span>
+            <h2 id="i18n-catalog-title" class="text-lg font-bold text-slate-900 mt-1">Commercial Indian SKUs, Honest Source Provenance &amp; Custom CSV/JSON Import</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <label for="catalog-import-file" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold cursor-pointer">
+              📥 Import SKU CSV/JSON
+            </label>
+            <input type="file" id="catalog-import-file" accept=".json,.csv" onchange="handleCatalogFileImport(this)" class="hidden" />
+            <label for="catalog-search-input" class="hidden">Search Catalog</label>
+            <input type="text" id="catalog-search-input" placeholder="Search brand, salt, citation, schedule..." oninput="renderCatalogTable()" class="border border-slate-300 rounded-lg px-3 py-1.5 w-64" />
+            <label for="catalog-status-filter" class="hidden">Filter Status</label>
+            <select id="catalog-status-filter" onchange="renderCatalogTable()" class="border border-slate-300 rounded-lg px-2.5 py-1.5 bg-slate-50 font-semibold">
+              <option value="ALL">All Statuses</option>
+              <option value="VERIFIED">VERIFIED (Primary Leaflet / Blueprint Table Checked)</option>
+              <option value="UNVERIFIED">UNVERIFIED (Reference Monograph / Pending Physical Leaflet)</option>
+              <option value="BANNED">BANNED / PROHIBITED (Statutory Blocklist)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-900 text-white">
+                <th class="p-3 font-bold">Brand / Molecule &amp; AMR Tier</th>
+                <th class="p-3 font-bold">Composition &amp; Strength</th>
+                <th class="p-3 font-bold">Species, Routes &amp; Daily Ceiling</th>
+                <th class="p-3 font-bold">Dose Source Citation &amp; Source Vintage</th>
+                <th class="p-3 font-bold">Status &amp; Action</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-table-body" class="divide-y divide-slate-200 bg-white"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Adverse Drug Reaction (ADR) & Pharmacovigilance Log -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">Veterinary Pharmacovigilance (IPC-PvPI / openFDA VEDDRA Schema)</span>
+            <h2 id="i18n-adr-title" class="text-base font-bold text-slate-900 mt-1">Adverse Drug Reaction (ADR) &amp; Excipient Toxicity Logger</h2>
+          </div>
+          <button type="button" onclick="exportAdrLogsJson()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold">Export ADR Reports (JSON)</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs">
+          <div class="lg:col-span-5 p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+            <div class="font-bold text-slate-800">Log New Suspected Adverse Event</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="adr-drug-name" class="block text-slate-600 mb-0.5">Suspected Brand / SKU</label>
+                <input type="text" id="adr-drug-name" value="Butalex (50 mg/mL)" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-semibold" />
+              </div>
+              <div>
+                <label for="adr-batch-no" class="block text-slate-600 mb-0.5">Batch No. &amp; Expiry</label>
+                <input type="text" id="adr-batch-no" value="BTX-2604A (Exp 09/2028)" class="w-full border border-slate-300 rounded px-2 py-1 bg-white mono" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="adr-patient" class="block text-slate-600 mb-0.5">Patient Species &amp; Weight</label>
+                <input type="text" id="adr-patient" value="Murrah Buffalo • 500 kg" class="w-full border border-slate-300 rounded px-2 py-1 bg-white" />
+              </div>
+              <div>
+                <label for="adr-severity" class="block text-slate-600 mb-0.5">VEDDRA Severity</label>
+                <select id="adr-severity" class="w-full border border-slate-300 rounded px-2 py-1 bg-white font-semibold">
+                  <option value="Mild (Local / Transient)">Mild (Local / Transient)</option>
+                  <option value="Moderate (Systemic — Intervention Needed)" selected>Moderate (Systemic — Intervention Needed)</option>
+                  <option value="Severe / Life-Threatening">Severe / Life-Threatening</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="adr-reaction" class="block text-slate-600 mb-0.5">Observed Clinical Reaction &amp; Suspected Excipient</label>
+              <input type="text" id="adr-reaction" value="Localized cervical muscle edema when >10 mL injected at single site (NMP excipient irritation)" class="w-full border border-slate-300 rounded px-2 py-1 bg-white" />
+            </div>
+            <button type="button" onclick="logNewAdrEvent()" class="w-full py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">+ Record ADR to IndexedDB &amp; Audit Trail</button>
+          </div>
+
+          <div class="lg:col-span-7 space-y-2 max-h-64 overflow-y-auto" id="adr-log-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 6: STATUTORY PRESCRIPTION, REAL QR, BACKUP & AUDIT LOG          -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-rx" role="tabpanel" aria-labelledby="tab-btn-rx" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Printable Statutory Prescription Document -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm no-print">
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="btn-sign-rx" onclick="signAndLockPrescription()" class="px-3.5 py-2 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                <span>✒️ Sign &amp; Log Rx</span>
+              </button>
+              <button type="button" id="btn-unlock-new-rx" onclick="startNewUnsignedPrescription()" class="hidden px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">
+                <span>🔓 Start New Prescription</span>
+              </button>
+              <button type="button" onclick="sharePrescriptionWhatsApp()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                <span id="i18n-whatsapp-btn">📲 Share via WhatsApp (Trilingual + QR Hash)</span>
+              </button>
+              <button type="button" onclick="window.print()" class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs flex items-center gap-1.5">
+                <span>Print / Save PDF</span>
+              </button>
+            </div>
+            <label for="toggle-euthanasia-cert" class="flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
+              <input type="checkbox" id="toggle-euthanasia-cert" onchange="renderPrescriptionPreview()" class="rounded text-teal-600" />
+              <span>Include VCI Owner Consent Thumb Block</span>
+            </label>
+          </div>
+
+          <!-- THE PRESCRIPTION SHEET -->
+          <div id="printable-rx-area" class="bg-white rounded-xl border-2 border-slate-800 shadow-md p-6 space-y-5 text-xs"></div>
+        </div>
+
+        <!-- Right Column: IndexedDB Saved Cases, Backup Export/Import, Schedule H1/NDPS Register, and Full Change Audit Trail -->
+        <div class="lg:col-span-5 space-y-4 no-print">
+
+          <!-- IndexedDB Persistent Case History + Full Backup Export & Restore Import -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+              <div>
+                <h3 id="i18n-case-history-title" class="text-sm font-bold text-slate-900">Persistent Case History (`IndexedDB` + PBKDF2 AES-256 PII)</h3>
+                <p class="text-xs text-slate-500">Offline field cases stored in IndexedDB. Export or restore a full JSON backup anytime.</p>
+              </div>
+              <button type="button" onclick="saveCurrentCaseToIndexedDb()" class="px-2.5 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs">+ Save Current</button>
+            </div>
+
+            <!-- IndexedDB Full Backup Export & Restore Import Bar -->
+            <div class="flex flex-wrap items-center gap-2 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+              <button type="button" onclick="exportIndexedDbBackupJson()" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs">
+                <span id="i18n-backup-export-btn">📤 Export IndexedDB Backup (.json)</span>
+              </button>
+              <label for="indexeddb-restore-file" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs cursor-pointer">
+                <span id="i18n-backup-import-btn">📥 Restore IndexedDB Backup (.json)</span>
+              </label>
+              <input type="file" id="indexeddb-restore-file" accept=".json" onchange="handleIndexedDbRestoreFile(this)" class="hidden" />
+            </div>
+
+            <div id="indexeddb-cases-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs"></div>
+          </div>
+
+          <!-- Statutory Registers: Schedule H1 (3-Yr), NDPS / Schedule X (2-Yr), DPDP Audit Log (1-Yr) -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div>
+                <h3 id="i18n-registers-title" class="text-sm font-bold text-slate-900">Persistent In-Clinic Dispensing &amp; Audit Registers</h3>
+                <p class="text-xs text-slate-500">Persisted in IndexedDB across refreshes. Note: Retail H1 register is the chemist's duty under Rule 65; clinic logs self-dispensed &amp; NDPS items.</p>
+              </div>
+              <button type="button" onclick="exportStatutoryLogsJson()" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs">Export JSON</button>
+            </div>
+
+            <div>
+              <div class="text-xs font-bold text-slate-800 mb-1.5 flex items-center justify-between">
+                <span>Schedule H1 &amp; NDPS / Schedule X Dispensing Log</span>
+                <span class="mono text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-semibold">3-Yr H1 / 2-Yr NDPS</span>
+              </div>
+              <div id="h1-register-list" class="space-y-2 max-h-44 overflow-y-auto pr-1 text-xs"></div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="text-xs font-bold text-slate-800 mb-1.5 flex items-center justify-between">
+                <span>Immutable Change Audit Trail &amp; DPDP Log (G.S.R. 846(E))</span>
+                <span class="mono text-xs px-2 py-0.5 rounded bg-teal-100 text-teal-900 font-semibold">Who • What • When</span>
+              </div>
+              <div id="dpdp-audit-list" class="space-y-1.5 max-h-56 overflow-y-auto pr-1 mono text-xs"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 7: 16 GOLDEN TEST VECTORS (CALLING LIVE VETDOSEENGINE)          -->
+    <!-- =================================================================== -->
+    <section id="tab-panel-tests" role="tabpanel" aria-labelledby="tab-btn-tests" class="hidden space-y-6">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">Live Engine Automated Verification Suite (16/16 Test Vectors)</span>
+            <h2 id="i18n-tests-title" class="text-lg font-bold text-slate-900 mt-1">Golden Test Vectors (TC-01 to TC-16): Direct `VetDoseEngine` Invocations (Zero Inline Math)</h2>
+            <p class="text-xs text-slate-500">Every test calls the live stateless `VetDoseEngine` functions (`calculateDosage`, `calculateFluidsAndKcl`, `calculateCri`, `calculateCpr`, `estimateLivestockWeightKg`, `calculateFlockWaterOrFeedDose`) and `VetCryptoStorage` directly.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="test-suite-summary-badge" class="mono text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-300">Running...</span>
+            <button type="button" onclick="runGoldenTestSuite()" class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold">
+              <span id="i18n-rerun-tests-btn">Re-Run All 16 Vectors</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="golden-tests-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FIXED MOBILE-FIRST BOTTOM NAVIGATION BAR (Replaces Top Scrolling Tabs) -->
+  <nav id="bottom-nav-bar" role="tablist" aria-label="Clinical Modules" class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900 text-white border-t border-slate-800 shadow-xl no-print">
+    <div class="max-w-7xl mx-auto grid grid-cols-7">
+      <button type="button" role="tab" aria-selected="true" aria-controls="tab-panel-dosage" onclick="switchMainTab('dosage')" id="tab-btn-dosage" class="nav-tab-btn py-2 px-1 text-xs font-bold border-t-2 border-teal-400 text-teal-300 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">💊</span>
+        <span id="i18n-tab-dosage" class="truncate">1. Dosage</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-fluids" onclick="switchMainTab('fluids')" id="tab-btn-fluids" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">💧</span>
+        <span id="i18n-tab-fluids" class="truncate">2. Fluids</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-cri" onclick="switchMainTab('cri')" id="tab-btn-cri" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">💉</span>
+        <span id="i18n-tab-cri" class="truncate">3. CRI</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-cpr" onclick="switchMainTab('cpr')" id="tab-btn-cpr" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">⚡</span>
+        <span id="i18n-tab-cpr" class="truncate">4. CPR</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-catalog" onclick="switchMainTab('catalog')" id="tab-btn-catalog" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">📋</span>
+        <span id="i18n-tab-catalog" class="truncate">5. Catalog</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-rx" onclick="switchMainTab('rx')" id="tab-btn-rx" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <div class="flex items-center gap-1">
+          <span aria-hidden="true">℞</span>
+          <span id="rx-count-badge" class="px-1.5 rounded-full text-xs bg-teal-500 text-slate-950 font-bold">0</span>
+        </div>
+        <span id="i18n-tab-rx" class="truncate">6. e-Rx</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-panel-tests" onclick="switchMainTab('tests')" id="tab-btn-tests" class="nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate">
+        <span aria-hidden="true">✅</span>
+        <span id="i18n-tab-tests" class="truncate">7. Tests (16/16)</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- LEAFLET VERIFICATION MODAL (Requires Signed-In Supervising Vet + Leaflet Reference + Persists to IndexedDB) -->
+  <div id="leaflet-modal" role="dialog" aria-modal="true" aria-labelledby="leaflet-modal-title" class="fixed inset-0 bg-slate-950/60 z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full overflow-hidden">
+      <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+        <h3 id="leaflet-modal-title" class="text-sm font-bold">Verify Physical Product Leaflet &amp; Unlock SKU</h3>
+        <button type="button" onclick="closeLeafletModal()" class="text-slate-400 hover:text-white text-sm font-bold" aria-label="Close Modal">✕</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs">
+        <p class="text-slate-600 leading-relaxed">
+          Unlocking an `UNVERIFIED` SKU requires a signed-in Supervising Registered Veterinarian (cannot be unlocked under the anonymous Sandbox Demo profile), plus the manufacturer leaflet reference/batch code and excipient declaration.
+        </p>
+        <input type="hidden" id="modal-sku-id" />
+        <div>
+          <label for="modal-sku-name" class="block font-bold text-slate-700 mb-1">Brand &amp; Manufacturer</label>
+          <input type="text" id="modal-sku-name" readonly class="w-full border border-slate-200 rounded-lg px-3 py-1.5 bg-slate-100 font-bold text-slate-800" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="modal-sku-strength" class="block font-bold text-slate-700 mb-1">Confirmed Strength Value</label>
+            <input type="number" id="modal-sku-strength" step="0.1" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 mono font-bold" />
+          </div>
+          <div>
+            <label for="modal-sku-dose" class="block font-bold text-slate-700 mb-1">Confirmed Default Dose (mg/kg)</label>
+            <input type="number" id="modal-sku-dose" step="0.05" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 mono font-bold" />
+          </div>
+        </div>
+        <div>
+          <label for="modal-sku-note" class="block font-bold text-slate-700 mb-1">Manufacturer Leaflet Batch / Reference Code &amp; Excipients</label>
+          <input type="text" id="modal-sku-note" placeholder="Enter Leaflet Ref No., Approval Code &amp; Excipients (Min 10 chars)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5" />
+        </div>
+        <div id="leaflet-modal-error" role="alert" class="hidden p-2 rounded bg-rose-50 border border-rose-300 text-rose-800 font-semibold"></div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeLeafletModal()" class="px-3.5 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold">Cancel</button>
+          <button type="button" onclick="confirmLeafletVerification()" class="px-4 py-2 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold">Verify &amp; Unlock Auto-Calculation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIGH-RISK MEDICATION READ-BACK CONFIRMATION MODAL (For NDPS Opioids & KCl) -->
+  <div id="readback-modal" role="dialog" aria-modal="true" aria-labelledby="readback-modal-title" class="fixed inset-0 bg-slate-950/60 z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl border-2 border-rose-600 shadow-xl max-w-lg w-full overflow-hidden">
+      <div class="bg-rose-900 text-white px-5 py-3.5 flex items-center justify-between">
+        <h3 id="readback-modal-title" class="text-sm font-bold">⚠️ High-Risk Medication Two-Person / Read-Back Confirmation</h3>
+        <button type="button" onclick="closeReadbackModal()" class="text-rose-200 hover:text-white text-sm font-bold">✕</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs">
+        <p id="readback-prompt-text" class="text-slate-800 font-medium leading-relaxed"></p>
+        <div class="p-3 rounded-lg bg-rose-50 border border-rose-200 mono font-bold text-rose-950" id="readback-target-display"></div>
+        <div>
+          <label for="readback-input-val" class="block font-bold text-slate-800 mb-1">Type the exact numeric dose/volume shown above to confirm read-back:</label>
+          <input type="text" id="readback-input-val" placeholder="Enter exact numeric value" class="w-full border border-slate-300 rounded-lg px-3 py-2 mono font-bold text-sm" />
+        </div>
+        <div id="readback-error-box" role="alert" class="hidden p-2 rounded bg-rose-100 text-rose-900 font-bold"></div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeReadbackModal()" class="px-3.5 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold">Cancel</button>
+          <button type="button" onclick="confirmHighRiskReadback()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold">Confirm Read-Back &amp; Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION (Positioned Above Bottom Nav Bar) -->
+  <div id="toast-container" class="fixed bottom-20 right-4 z-50 space-y-2 no-print" aria-live="polite"></div>
+
+  <!-- INLINED MODULAR JSON & JS MODULES (Populated by build_bundle.py) -->
+  <!-- Data & Logic Modules -->
+  <script>
+    // Load catalog into window.VETRX_CATALOG_DATA
+    async function loadCatalog() {
+      const response = await fetch('data/drug_catalog.json');
+      window.VETRX_CATALOG_DATA = await response.json();
+    }
+  </script>
+  <script src="src/dose_engine.js"></script>
+  <script src="src/crypto_storage.js"></script>
+  <script src="src/i18n.js"></script>
+  <script src="src/app_controller.js"></script>
+  <script>
+    // Initialize PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('SW registered:', reg);
+        }).catch(err => {
+          console.log('SW failed:', err);
+        });
+      });
+    }
+    
+    // Bootstrap the app after catalog is loaded
+    (async () => {
+      await loadCatalog();
+      // app_controller initialization is handled by DOMContentLoaded in the file
+      // but since we fetch the catalog async, we might need to trigger it manually 
+      // or ensure app_controller waits for VETRX_CATALOG_DATA.
+      // Looking at app_controller, it uses window.VETRX_CATALOG_DATA in DOMContentLoaded.
+    })();
+  </script>
+</body>
+</html>
