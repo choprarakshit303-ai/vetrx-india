@@ -99,31 +99,38 @@ function setDosageStep(step) {
   const col23 = document.getElementById('dosage-step-2-3-column');
   const s2 = document.getElementById('dosage-step-2-panel');
   const s3 = document.getElementById('dosage-step-3-panel');
+  if (!s1 || !col23 || !s2 || !s3) return;
+
+  // Reset visibility first
+  s1.classList.remove('hidden');
+  col23.classList.remove('hidden');
+  s2.classList.remove('hidden');
+  s3.classList.remove('hidden');
+
+  const baseS1 = 'w-full min-w-0 space-y-5';
+  const baseCol23 = 'w-full min-w-0 space-y-5';
+  const baseS2 = 'w-full min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden';
+  const baseS3 = 'w-full min-w-0 space-y-5';
 
   if (step === 1) {
-    s1.classList.remove('hidden');
-    s1.className = 'lg:col-span-12 space-y-5';
-    col23.classList.add('hidden');
+    s1.className = baseS1 + ' col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' hidden col-span-1 lg:col-span-12';
   } else if (step === 2) {
-    s1.classList.add('hidden');
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-12 space-y-5';
-    s2.classList.remove('hidden');
-    s3.classList.add('hidden');
+    s1.className = baseS1 + ' hidden col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-12';
+    s2.className = baseS2;
+    s3.className = baseS3 + ' hidden';
   } else if (step === 3) {
-    s1.classList.add('hidden');
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-12 space-y-5';
-    s2.classList.add('hidden');
-    s3.classList.remove('hidden');
+    s1.className = baseS1 + ' hidden col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-12';
+    s2.className = baseS2 + ' hidden';
+    s3.className = baseS3;
   } else {
     // 'all' — Side-by-side Desktop / Full View
-    s1.classList.remove('hidden');
-    s1.className = 'lg:col-span-5 space-y-5';
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-7 space-y-5';
-    s2.classList.remove('hidden');
-    s3.classList.remove('hidden');
+    s1.className = baseS1 + ' col-span-1 lg:col-span-5';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-7';
+    s2.className = baseS2;
+    s3.className = baseS3;
   }
 
   const mapBtns = [

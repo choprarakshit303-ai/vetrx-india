@@ -121,6 +121,8 @@ details > summary::-webkit-details-marker { display: none; }
 .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.col-span-1 { grid-column: span 1 / span 1; }
+.min-w-0 { min-width: 0; }
 .gap-1 { gap: 0.25rem; }
 .gap-1\.5 { gap: 0.375rem; }
 .gap-2 { gap: 0.5rem; }
@@ -433,6 +435,7 @@ details > summary::-webkit-details-marker { display: none; }
   .lg\:col-span-5 { grid-column: span 5 / span 5; }
   .lg\:col-span-6 { grid-column: span 6 / span 6; }
   .lg\:col-span-7 { grid-column: span 7 / span 7; }
+  .lg\:col-span-12 { grid-column: span 12 / span 12; }
 }
 
 /* Clean Print Media Queries (Fixed #printable-rx-area selector; uses display:none instead of visibility:hidden to eliminate blank overflow pages, and page-break-before for duplicate copies!) */
@@ -3511,31 +3514,38 @@ function setDosageStep(step) {
   const col23 = document.getElementById('dosage-step-2-3-column');
   const s2 = document.getElementById('dosage-step-2-panel');
   const s3 = document.getElementById('dosage-step-3-panel');
+  if (!s1 || !col23 || !s2 || !s3) return;
+
+  // Reset visibility first
+  s1.classList.remove('hidden');
+  col23.classList.remove('hidden');
+  s2.classList.remove('hidden');
+  s3.classList.remove('hidden');
+
+  const baseS1 = 'w-full min-w-0 space-y-5';
+  const baseCol23 = 'w-full min-w-0 space-y-5';
+  const baseS2 = 'w-full min-w-0 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden';
+  const baseS3 = 'w-full min-w-0 space-y-5';
 
   if (step === 1) {
-    s1.classList.remove('hidden');
-    s1.className = 'lg:col-span-12 space-y-5';
-    col23.classList.add('hidden');
+    s1.className = baseS1 + ' col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' hidden col-span-1 lg:col-span-12';
   } else if (step === 2) {
-    s1.classList.add('hidden');
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-12 space-y-5';
-    s2.classList.remove('hidden');
-    s3.classList.add('hidden');
+    s1.className = baseS1 + ' hidden col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-12';
+    s2.className = baseS2;
+    s3.className = baseS3 + ' hidden';
   } else if (step === 3) {
-    s1.classList.add('hidden');
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-12 space-y-5';
-    s2.classList.add('hidden');
-    s3.classList.remove('hidden');
+    s1.className = baseS1 + ' hidden col-span-1 lg:col-span-12';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-12';
+    s2.className = baseS2 + ' hidden';
+    s3.className = baseS3;
   } else {
     // 'all' — Side-by-side Desktop / Full View
-    s1.classList.remove('hidden');
-    s1.className = 'lg:col-span-5 space-y-5';
-    col23.classList.remove('hidden');
-    col23.className = 'lg:col-span-7 space-y-5';
-    s2.classList.remove('hidden');
-    s3.classList.remove('hidden');
+    s1.className = baseS1 + ' col-span-1 lg:col-span-5';
+    col23.className = baseCol23 + ' col-span-1 lg:col-span-7';
+    s2.className = baseS2;
+    s3.className = baseS3;
   }
 
   const mapBtns = [
