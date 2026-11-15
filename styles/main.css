@@ -452,3 +452,41 @@ details > summary::-webkit-details-marker { display: none; }
   }
 }
 
+
+/* License Gateway */
+#license-gateway.hidden { display: none !important; }
+.backdrop-blur-sm { backdrop-filter: blur(4px); }
+.bg-slate-950\/80 { background-color: rgba(2, 6, 23, 0.8); }
+.shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+.max-w-md { max-width: 28rem; }
+.opacity-60 { opacity: 0.6; }
+.opacity-75 { opacity: 0.75; }
+
+/* Desktop & Tablet Clinic Workstation Optimizations */
+@media (min-width: 768px) {
+  body { padding-bottom: 5.75rem; }
+  #bottom-nav-bar .max-w-7xl { max-width: 96rem; }
+  .nav-tab-btn { padding-top: 0.75rem; padding-bottom: 0.75rem; font-size: 0.8125rem; gap: 0.25rem; }
+  .nav-tab-btn span[aria-hidden="true"] { font-size: 1rem; }
+  main.max-w-7xl { max-width: 96rem; padding-left: 1.25rem; padding-right: 1.25rem; }
+  #golden-tests-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  body { padding-bottom: 6rem; }
+  main.max-w-7xl { max-width: 100rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+  #bottom-nav-bar .max-w-7xl { max-width: 100rem; }
+  #digital-prescription-slip-area, #printable-rx-area { font-size: 0.8125rem; }
+  .grid.lg\:grid-cols-12 { gap: 1.5rem; }
+}
+
+@media (min-width: 1280px) {
+  main.max-w-7xl { max-width: 110rem; }
+  #bottom-nav-bar .max-w-7xl { max-width: 110rem; }
+}
+
+/* Terms of Service modal utilities */
+.z-\[60\] { z-index: 60; }
+.bg-slate-950\/85 { background-color: rgba(2, 6, 23, 0.85); }
+.max-h-\[70vh\] { max-height: 70vh; }

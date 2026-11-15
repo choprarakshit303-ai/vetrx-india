@@ -43,6 +43,11 @@ let appState = {
   lang: 'en',
   activeTab: 'dosage',
   dosageStep: 'all',
+  license: {
+    isLicensed: false,
+    clientName: '',
+    key: ''
+  },
   rxId: 'RX-IND-' + getTodayIsoDate().replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000),
   consentReceiptId: 'DPDP-' + getTodayIsoDate().replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000),
   isSignedLocked: false,
@@ -1235,6 +1240,107 @@ function startNewUnsignedPrescription() {
   renderRxItemsLists();
   recalculateAll();
   showToast('Started new unsigned prescription (' + appState.rxId + ').', 'teal');
+}
+
+// =========================================================================
+// DIGITAL PRESCRIPTION GENERATOR MODULE (Clean Printable Clinical Slip)
+// =========================================================================
+function getWithdrawalPeriodText(wdInfo, isFoodProducing) {
+  if (!isFoodProducing || !wdInfo) return 'N/A (non-food animal or not applicable)';
+  const milk = wdInfo.milkWithdrawalHr != null ? (wdInfo.milkWithdrawalHr + ' hr (Safe: ' + (wdInfo.milkSafeIso || '—') + ')') : 'N/A';
+  const meat = wdInfo.meatWithdrawalDays != null ? (wdInfo.meatWithdrawalDays + ' days (Safe: ' + (wdInfo.meatSafeIso || '—') + ')') : 'N/A';
+  return 'Milk: ' + milk + ' | Meat: ' + meat;
+}
+
+function generateDigitalPrescriptionSlip() {
+  const container = document.getElementById('digital-prescription-slip-area');
+  if (!container) return;
+
+  const ownerName = (document.getElementById('client-name')?.value || '').trim() || '—';
+  const animalId = (document.getElementById('patient-name')?.value || '').trim() || '—';
+  const spCode = document.getElementById('patient-species')?.value || 'dog';
+  const spMeta = SPECIES_META[spCode] || SPECIES_META.dog;
+  const breed = (document.getElementById('patient-breed')?.value || '').trim() || '—';
+  const bw = (document.getElementById('patient-bw')?.value || '').trim() || '—';
+  const prac = appState.signedByPractitioner || getActivePractitioner();
+  const c = appState.lastCalculation;
+
+  let doseBlock = '<div class="p-3 rounded border border-dashed border-slate-300 text-slate-500">No valid calculated dosage available. Complete Step 1 & Step 2 to generate a slip.</div>';
+  let withdrawalText = '—';
+  let skuLine = '—';
+
+  if (c && c.sku && c.selectedDose) {
+    const headline = c.headlineText || (Number(c.selectedDose).toFixed(2) + ' ' + (c.doseUnit || 'mg/kg'));
+    const exact = (c.exactDoseVal != null && isFinite(c.exactDoseVal)) ? (c.exactDoseVal.toFixed(2) + ' mg per dose') : '—';
+    const route = c.route || c.sku.defaultRoute || '—';
+    const freq = c.sku.defaultFreq || '—';
+    const duration = c.doseDurationDays || '—';
+    const supply = c.totalSupplyText || '—';
+    withdrawalText = getWithdrawalPeriodText(c.wdInfo, !!spMeta.foodProducing);
+    skuLine = escapeHtml(c.sku.brand || '—') + ' (' + escapeHtml(c.sku.inn || '—') + ', ' + escapeHtml(c.sku.strengthVal + ' ' + c.sku.strengthUnit) + ')';
+    doseBlock =
+      '<table class="w-full text-xs border border-slate-300 border-collapse">' +
+        '<tbody>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1 w-1/3">Medication</th><td class="border border-slate-300 px-2 py-1">' + skuLine + '</td></tr>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Calculated Dosage (Sig)</th><td class="border border-slate-300 px-2 py-1 font-semibold mono">' + escapeHtml(headline) + '</td></tr>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Exact Dose</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(exact) + '</td></tr>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Route / Frequency / Duration</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(route) + ' | every ' + escapeHtml(String(freq)) + ' h | ' + escapeHtml(String(duration)) + ' day(s)</td></tr>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Total Supply</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(supply) + '</td></tr>' +
+          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Withdrawal Period</th><td class="border border-slate-300 px-2 py-1 font-semibold text-amber-900">' + escapeHtml(withdrawalText) + '</td></tr>' +
+        '</tbody>' +
+      '</table>';
+  }
+
+  const rxId = appState.rxId || '—';
+  const date = getTodayIsoDate();
+  container.innerHTML =
+    '<div id="digital-prescription-slip-printable" class="space-y-3">' +
+      '<div class="flex items-start justify-between border-b-2 border-slate-800 pb-2">' +
+        '<div>' +
+          '<div class="text-xs font-bold uppercase tracking-wider text-slate-600">Clinical Prescription Slip</div>' +
+          '<div class="text-sm font-extrabold text-slate-900">' + escapeHtml(prac.clinicName || 'Veterinary Clinic') + '</div>' +
+          '<div class="text-xs text-slate-700">' + escapeHtml(prac.name || '') + ' • ' + escapeHtml(prac.regNumber || '') + '</div>' +
+        '</div>' +
+        '<div class="text-right text-xs mono">' +
+          '<div><strong>Date:</strong> ' + escapeHtml(date) + '</div>' +
+          '<div><strong>Rx ID:</strong> ' + escapeHtml(rxId) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">' +
+        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Owner Name:</span> ' + escapeHtml(ownerName) + '</div>' +
+        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Animal ID / Patient:</span> ' + escapeHtml(animalId) + '</div>' +
+        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Species / Breed:</span> ' + escapeHtml(spMeta.label) + ' / ' + escapeHtml(breed) + '</div>' +
+        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Body Weight:</span> ' + escapeHtml(bw) + ' kg</div>' +
+      '</div>' +
+      doseBlock +
+      '<div class="pt-2 border-t border-slate-300 flex items-end justify-between gap-4 text-xs">' +
+        '<div class="text-slate-600 max-w-md"><strong>Note:</strong> Clinical decision-support slip. Verify against physical leaflet/formulary before dispensing or administration. Practitioner retains sole responsibility.</div>' +
+        '<div class="text-right">' +
+          '<div class="border-t border-slate-500 pt-1 mt-6 w-40 text-slate-700">Veterinarian Signature</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  showToast('Digital prescription slip generated.', 'teal');
+}
+
+function printDigitalPrescriptionSlip() {
+  const content = document.getElementById('digital-prescription-slip-printable');
+  if (!content) {
+    showToast('Generate the clinical prescription slip first.', 'amber');
+    return;
+  }
+  const w = window.open('', '_blank', 'width=800,height=900');
+  if (!w) {
+    showToast('Popup blocked. Allow popups to print the slip.', 'amber');
+    return;
+  }
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Clinical Prescription Slip</title>' +
+    '<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:20px;color:#0f172a;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #cbd5e1;padding:6px 8px;font-size:12px;} th{background:#f8fafc;text-align:left;} .mono{font-family:ui-monospace,monospace;} @media print{body{padding:0;}}</style>' +
+    '</head><body>' + content.innerHTML + '</body></html>');
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); }, 250);
 }
 
 function sharePrescriptionWhatsApp() {
@@ -2900,11 +3006,16 @@ function setAppLanguage(lang) {
 }
 
 function switchMainTab(tabName) {
+  if (tabName === 'tests' && !appState.license.isLicensed) {
+    showToast('Clinical test vectors are locked. Activate a valid license key to unlock.', 'amber');
+    return;
+  }
   appState.activeTab = tabName;
   const tabs = ['dosage', 'fluids', 'cri', 'cpr', 'catalog', 'rx', 'tests'];
   tabs.forEach(t => {
     const panel = document.getElementById('tab-panel-' + t);
     const btn = document.getElementById('tab-btn-' + t);
+    if (!panel || !btn) return;
     if (t === tabName) {
       panel.classList.remove('hidden');
       btn.setAttribute('aria-selected', 'true');
@@ -2915,6 +3026,120 @@ function switchMainTab(tabName) {
       btn.className = 'nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate';
     }
   });
+}
+
+function isValidLicenseKey(key) {
+  const k = String(key || '').trim().toUpperCase();
+  return /^VETRX-[A-Z0-9-]{6,}$/.test(k) && k.length >= 12;
+}
+
+function hasAcceptedTermsOfService() {
+  try { return localStorage.getItem('vetrx_tos_accepted') === 'true'; } catch (e) { return false; }
+}
+
+function updateTermsOfServiceUi() {
+  const accepted = hasAcceptedTermsOfService();
+  const modal = document.getElementById('tos-modal');
+  if (modal) modal.classList.toggle('hidden', accepted);
+  // Keep license gateway hidden behind ToS until accepted
+  const gateway = document.getElementById('license-gateway');
+  if (gateway && !accepted) gateway.classList.add('hidden');
+}
+
+function acceptTermsOfService() {
+  const cb = document.getElementById('tos-accept-checkbox');
+  const err = document.getElementById('tos-error');
+  if (!cb || !cb.checked) {
+    if (err) { err.textContent = 'You must accept the Terms of Service & Clinical Disclaimer to continue.'; err.classList.remove('hidden'); }
+    return;
+  }
+  try {
+    localStorage.setItem('vetrx_tos_accepted', 'true');
+    localStorage.setItem('vetrx_tos_accepted_at', new Date().toISOString());
+  } catch (e) {}
+  if (err) err.classList.add('hidden');
+  updateTermsOfServiceUi();
+  updateLicenseUiState();
+  showToast('Terms of Service & Clinical Disclaimer accepted.', 'teal');
+}
+
+function updateLicenseUiState() {
+  const licensed = !!appState.license.isLicensed;
+  const tosAccepted = hasAcceptedTermsOfService();
+  const gateway = document.getElementById('license-gateway');
+  if (gateway) gateway.classList.toggle('hidden', licensed || !tosAccepted);
+  const headerLock = document.getElementById('header-golden-lock');
+  const tabLock = document.getElementById('tab-tests-lock');
+  if (headerLock) headerLock.classList.toggle('hidden', licensed);
+  if (tabLock) tabLock.classList.toggle('hidden', licensed);
+  const headerBtn = document.getElementById('header-golden-tests-btn');
+  if (headerBtn) {
+    headerBtn.classList.toggle('opacity-75', !licensed);
+    headerBtn.title = licensed ? 'Open Golden Test Vectors' : 'Locked: activate license key to unlock clinical vectors';
+  }
+  const testsBtn = document.getElementById('tab-btn-tests');
+  if (testsBtn) {
+    testsBtn.classList.toggle('opacity-60', !licensed);
+    testsBtn.title = licensed ? 'Clinical Test Vectors' : 'Locked: activate license key';
+  }
+}
+
+function restoreLicenseState() {
+  try {
+    const key = (localStorage.getItem('vetrx_license_key') || '').trim();
+    const clientName = (localStorage.getItem('vetrx_license_client') || '').trim();
+    if (isValidLicenseKey(key)) {
+      appState.license.isLicensed = true;
+      appState.license.key = key;
+      appState.license.clientName = clientName;
+    } else {
+      appState.license.isLicensed = false;
+      appState.license.key = '';
+      appState.license.clientName = '';
+    }
+  } catch (e) {
+    appState.license.isLicensed = false;
+  }
+  updateLicenseUiState();
+}
+
+function activateLicenseGateway() {
+  const clientEl = document.getElementById('license-client-name');
+  const keyEl = document.getElementById('license-key-input');
+  const errEl = document.getElementById('license-gateway-error');
+  const clientName = (clientEl?.value || '').trim();
+  const key = (keyEl?.value || '').trim();
+  if (!clientName) {
+    if (errEl) { errEl.textContent = 'Enter clinic/client name to continue.'; errEl.classList.remove('hidden'); }
+    return;
+  }
+  if (!isValidLicenseKey(key)) {
+    if (errEl) { errEl.textContent = 'Invalid license key. Use a valid key (e.g. VETRX-XXXX-XXXX).'; errEl.classList.remove('hidden'); }
+    return;
+  }
+  try {
+    localStorage.setItem('vetrx_license_key', key.toUpperCase());
+    localStorage.setItem('vetrx_license_client', clientName);
+  } catch (e) {}
+  appState.license.isLicensed = true;
+  appState.license.key = key.toUpperCase();
+  appState.license.clientName = clientName;
+  if (errEl) errEl.classList.add('hidden');
+  updateLicenseUiState();
+  logUiChange('license_activated', clientName);
+  showToast('License activated. Clinical test vectors unlocked for ' + clientName + '.', 'teal');
+  runGoldenTestSuite();
+}
+
+function openLicensedTestsTab() {
+  if (!appState.license.isLicensed) {
+    updateLicenseUiState();
+    const gateway = document.getElementById('license-gateway');
+    if (gateway) gateway.classList.remove('hidden');
+    showToast('Activate a license key to unlock the 16 clinical test vectors.', 'amber');
+    return;
+  }
+  switchMainTab('tests');
 }
 
 function escapeHtml(str) {
@@ -2989,6 +3214,8 @@ function initDelegatedEventListeners() {
 window.addEventListener('DOMContentLoaded', async () => {
   initPwaOfflineSupport();
   initDelegatedEventListeners();
+  restoreLicenseState();
+  updateTermsOfServiceUi();
   await restorePersistentDataFromIndexedDb();
   document.getElementById('withdrawal-start-dt').value = getTodayIsoDate() + 'T08:00';
   syncSpeciesBcsAndModeUi('dog');
@@ -3005,7 +3232,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   renderAdrLogs();
   renderStatutoryRegisters();
   await renderIndexedDbCases();
-  await runGoldenTestSuite();
+  if (appState.license.isLicensed) {
+    await runGoldenTestSuite();
+  } else {
+    const badge = document.getElementById('test-suite-summary-badge');
+    if (badge) badge.textContent = 'Locked';
+  }
 });
 
 
