@@ -3327,6 +3327,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   syncSpeciesBcsAndModeUi('dog');
   setDosageStep('all');
   populateSkuDropdown('carodyl-75');
+  navigatePrimaryWorkspace('dosage');
   recalculateAll();
   renderRxItemsLists();
   calculateFluidsAndKcl();
