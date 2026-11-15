@@ -290,7 +290,13 @@
       "sourceCitation": "MSD Animal Health India Official Butalex Package Insert PDF (2.5 mg/kg = 1 mL/20 kg Deep IM in neck ONLY; ≤10 mL per site).",
       "sourceUrl": "https://www.msd-animal-health.co.in/wp-content/uploads/sites/33/2025/10/Butalex.pdf",
       "lastReviewed": "MSD Leaflet PDF (Oct 2025)",
-      "auditNote": "PRIMARY LABEL VERIFIED: Direct manufacturer PDF insert verified for strength, route, IM site limit, and India withdrawal."
+      "auditNote": "PRIMARY LABEL VERIFIED: Direct manufacturer PDF insert verified for strength, route, IM site limit, and India withdrawal.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 2.5-2.5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "carodyl-75",
@@ -368,7 +374,13 @@
       "sourceCitation": "Blueprint Verified Active Drug Dosages Table & FDA Carprofen Label (2 mg/lb = 4.4 mg/kg/day PO, divided 2.2 mg/kg q12h).",
       "sourceUrl": "https://www.petindiaonline.com/story-details.php?ref=2595428023",
       "lastReviewed": "Blueprint Verified Table",
-      "auditNote": "VERIFIED IN BLUEPRINT: Dogs ONLY; daily ceiling 4.4 mg/kg/day enforced (confirm physical Savavet carton for batch excipients)."
+      "auditNote": "VERIFIED IN BLUEPRINT: Dogs ONLY; daily ceiling 4.4 mg/kg/day enforced (confirm physical Savavet carton for batch excipients).",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 2-4.4 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "carodyl-25",
@@ -446,7 +458,13 @@
       "sourceCitation": "Blueprint Verified Active Drug Dosages Table (2 mg/lb = 4.4 mg/kg/day PO, divided 2.2 mg/kg q12h).",
       "sourceUrl": "https://www.petindiaonline.com/story-details.php?ref=2595428023",
       "lastReviewed": "Blueprint Verified Table",
-      "auditNote": "VERIFIED IN BLUEPRINT: Smallest Carodyl tablet (25 mg); toy dogs <4 kg breach ±10% quarter-tablet rounding (TC-06)."
+      "auditNote": "VERIFIED IN BLUEPRINT: Smallest Carodyl tablet (25 mg); toy dogs <4 kg breach ±10% quarter-tablet rounding (TC-06).",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 2-4.4 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "carodyl-100",
@@ -524,7 +542,13 @@
       "sourceCitation": "Blueprint Verified Active Drug Dosages Table (2 mg/lb = 4.4 mg/kg/day PO, divided 2.2 mg/kg q12h).",
       "sourceUrl": "https://www.petindiaonline.com/story-details.php?ref=2595428023",
       "lastReviewed": "Blueprint Verified Table",
-      "auditNote": "VERIFIED IN BLUEPRINT: 100 mg strength for large/giant breed dogs; hard-blocked in cats & livestock."
+      "auditNote": "VERIFIED IN BLUEPRINT: 100 mg strength for large/giant breed dogs; hard-blocked in cats & livestock.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 2-4.4 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "melonex-susp",
@@ -610,7 +634,13 @@
       "sourceCitation": "Strength (1.5 mg/mL) from Intas catalog; mg/kg dose is a textbook placeholder — verify against physical Intas leaflet, Plumb's, or BSAVA.",
       "sourceUrl": "https://www.intasanimalhealth.com/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED DOSE MONOGRAPH: Strength 1.5 mg/mL listed in blueprint; verify exact mg/kg bounds & excipients from physical Intas leaflet."
+      "auditNote": "UNVERIFIED DOSE MONOGRAPH: Strength 1.5 mg/mL listed in blueprint; verify exact mg/kg bounds & excipients from physical Intas leaflet.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.05-0.2 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "melonex-inj",
@@ -753,7 +783,13 @@
       "sourceCitation": "Strength (5 mg/mL) from Intas catalog; mg/kg & withdrawal values are reference placeholders — verify physical Intas vial insert.",
       "sourceUrl": "https://www.intasanimalhealth.com/ruminant-products/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Strength 5 mg/mL confirmed; verify exact species mg/kg and Indian milk/meat withdrawal from physical Intas vial."
+      "auditNote": "UNVERIFIED LEAFLET: Strength 5 mg/mL confirmed; verify exact species mg/kg and Indian milk/meat withdrawal from physical Intas vial.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.1-0.5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "melonex-bolus",
@@ -866,7 +902,13 @@
       "sourceCitation": "Composition (Meloxicam 100 mg) from Intas catalog; verify mg/kg and withdrawal against physical strip leaflet.",
       "sourceUrl": "https://www.intasanimalhealth.com/ruminant-products/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Composition verified from catalog; physical leaflet check required for dosing/withdrawal."
+      "auditNote": "UNVERIFIED LEAFLET: Composition verified from catalog; physical leaflet check required for dosing/withdrawal.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.5-1 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "melonex-plus-bolus",
@@ -979,7 +1021,13 @@
       "sourceCitation": "Intas Ruminant Catalog composition; verify physical leaflet for withdrawal and regimen.",
       "sourceUrl": "https://www.intasanimalhealth.com/ruminant-products/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Hard-blocked in cats/dogs due to 1500 mg Paracetamol co-active."
+      "auditNote": "UNVERIFIED LEAFLET: Hard-blocked in cats/dogs due to 1500 mg Paracetamol co-active.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.5-0.5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "oxytet-la-200",
@@ -1089,7 +1137,13 @@
       "sourceCitation": "U.S. Reference Label in Blueprint (9 mg/lb [~19.8 mg/kg] Deep IM; rapid IV causes collapse). Verify specific Indian commercial brand insert.",
       "sourceUrl": "https://www.fssai.gov.in/upload/uploadfiles/files/Comp_Contaminants_Regulations_2_4_2025_VIII.pdf",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED INDIAN BRAND: U.S. reference monograph from blueprint; verify specific Indian commercial vial before clinical use."
+      "auditNote": "UNVERIFIED INDIAN BRAND: U.S. reference monograph from blueprint; verify specific Indian commercial vial before clinical use.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 5-20 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "oxytet-ws-poultry",
@@ -1177,7 +1231,13 @@
       "sourceCitation": "Educational Flock/Aquaculture Dosing Reference — verify against physical Indian poultry/aqua product pouch.",
       "sourceUrl": "https://www.msdvetmanual.com/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: For practicing poultry drinking-water (mg/L) and fish feed (g/tonne) calculations."
+      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: For practicing poultry drinking-water (mg/L) and fish feed (g/tonne) calculations.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 10-50 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "intacef-tazo-4500",
@@ -1304,7 +1364,13 @@
       "sourceCitation": "Pack strength from retail listing (fixing 4500mL typo); mg/kg & withdrawal are textbook placeholders — verify physical Intas leaflet.",
       "sourceUrl": "https://animeal.in/collections/intas-injectable-for-small-animals",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Retail snippet only; verify reconstituted volume, mg/kg bounds, and withdrawal on physical Intas carton."
+      "auditNote": "UNVERIFIED LEAFLET: Retail snippet only; verify reconstituted volume, mg/kg bounds, and withdrawal on physical Intas carton.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 10-25 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "bactivon-tazo",
@@ -1390,7 +1456,13 @@
       "sourceCitation": "Composition from Intas Ruminant Catalog; active Cefquinome ~22.22 mg/mL (500 mg / 22.5 mL) — verify physical Intas insert.",
       "sourceUrl": "https://www.intasanimalhealth.com/ruminant-products/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Check physical Vial A + Vial B insert for exact final reconstituted volume and withdrawal."
+      "auditNote": "UNVERIFIED LEAFLET: Check physical Vial A + Vial B insert for exact final reconstituted volume and withdrawal.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 1-2 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "prednisolone-10",
@@ -1479,7 +1551,13 @@
       "sourceCitation": "Academic Reference Monograph for NSAID + Steroid Interaction & Pregnancy Gate Study — verify licensed formulary.",
       "sourceUrl": "https://www.bsava.com/formulary/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Included for studying NSAID + Steroid GI Perforation Interaction (TC-11) & Pregnancy Block (TC-12)."
+      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Included for studying NSAID + Steroid GI Perforation Interaction (TC-11) & Pregnancy Block (TC-12).",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.25-2 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "gentamicin-40",
@@ -1595,7 +1673,13 @@
       "sourceCitation": "Academic Reference Monograph for Nephrotoxicity Synergy & IRIS Renal Block Study — verify physical vial insert.",
       "sourceUrl": "https://www.msdvetmanual.com/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Included for studying Aminoglycoside + NSAID nephrotoxicity & IRIS Stage 2–4 blocks."
+      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Included for studying Aminoglycoside + NSAID nephrotoxicity & IRIS Stage 2–4 blocks.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 5-10 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "unizif-plus",
@@ -1684,7 +1768,13 @@
       "sourceCitation": "Composition from Intas Ruminant Catalog; verify mg/kg & withdrawal on physical Unizif Plus leaflet.",
       "sourceUrl": "https://www.repository.cam.ac.uk/bitstreams/d34afea6-4817-44a8-aadf-190f8f113651/download",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Composition confirmed in blueprint; verify physical leaflet for exact regimen and withdrawal."
+      "auditNote": "UNVERIFIED LEAFLET: Composition confirmed in blueprint; verify physical leaflet for exact regimen and withdrawal.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 1.1-2.2 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "neomec-10",
@@ -1809,7 +1899,13 @@
       "sourceCitation": "Strength (10 mg) cross-checked across pet pharmacies in blueprint (resolving 6 mg IndiaMART error); verify physical Intas insert.",
       "sourceUrl": "https://shakehands.co.in/products/intas-neomec-tablet",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Web listings had conflicting 6mg vs 10mg & pasted human text; verify physical Intas strip before clinical use."
+      "auditNote": "UNVERIFIED LEAFLET: Web listings had conflicting 6mg vs 10mg & pasted human text; verify physical Intas strip before clinical use.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.006-0.6 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "granof-tz",
@@ -1896,7 +1992,13 @@
       "sourceCitation": "Composition from Petvet Healthcare web product list; verify physical carton for dosing & withdrawal.",
       "sourceUrl": "https://www.petvethealthcare.in/product-list/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Composition from Petvet catalog; physical leaflet check required."
+      "auditNote": "UNVERIFIED LEAFLET: Composition from Petvet catalog; physical leaflet check required.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 5-15 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "sulphahit-bolus",
@@ -2009,7 +2111,13 @@
       "sourceCitation": "Strength (0.5 g) from Petvet Healthcare product list; verify mg/kg & withdrawal on physical leaflet.",
       "sourceUrl": "https://www.petvethealthcare.in/product-list/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Strength 0.5 g from Petvet catalog; verify physical insert."
+      "auditNote": "UNVERIFIED LEAFLET: Strength 0.5 g from Petvet catalog; verify physical insert.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 50-100 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "scatik-topical",
@@ -2083,7 +2191,13 @@
       "sourceCitation": "Strength (2% shampoo) from Petvet Healthcare catalog; verify dilution & wash instructions on physical bottle.",
       "sourceUrl": "https://www.petvethealthcare.in/product-list/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Hard-blocked in cats & aquaculture due to permethrin neurotoxicity."
+      "auditNote": "UNVERIFIED LEAFLET: Hard-blocked in cats & aquaculture due to permethrin neurotoxicity.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 1-3 mL/kg coat-tier. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "morphine-sch-x",
@@ -2175,7 +2289,13 @@
       "sourceCitation": "Academic Reference Monograph for NDPS High-Risk Read-Back & Duplicate Archive Study — verify licensed formulary.",
       "sourceUrl": "https://narcoordindia.gov.in/narcoordindia/Resources/1743504324-4856-DOC-list%20of%20schedule%20drugs.pdf",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Requires NDPS institutional license & high-risk read-back confirmation."
+      "auditNote": "UNVERIFIED REFERENCE MONOGRAPH: Requires NDPS institutional license & high-risk read-back confirmation.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.1-0.5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ataxin-150",
@@ -2264,7 +2384,13 @@
       "sourceCitation": "Blueprint Catalog Table (Enrofloxacin 150 mg; feline retinal-toxicity ceiling pending licensed formulary verification).",
       "sourceUrl": "https://plumbs.com/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Hard-blocks feline doses > 5 mg/kg/day (retinal blindness) & pediatric patients."
+      "auditNote": "UNVERIFIED LEAFLET: Hard-blocks feline doses > 5 mg/kg/day (retinal blindness) & pediatric patients.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 5-20 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "lixen-300",
@@ -2353,7 +2479,13 @@
       "sourceCitation": "Virbac Lixen duration verified in blueprint (3–4 wk superficial / 6–8 wk deep pyoderma); exact mg/kg pending Virbac leaflet.",
       "sourceUrl": "https://www.bsava.com/formulary/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Duration verified in blueprint; verify exact mg/kg bounds from Virbac leaflet."
+      "auditNote": "UNVERIFIED LEAFLET: Duration verified in blueprint; verify exact mg/kg bounds from Virbac leaflet.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 15-30 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "pimoben-5",
@@ -2430,7 +2562,13 @@
       "sourceCitation": "Blueprint Verified Dosages Table (0.5 mg/kg/day divided q12h PO; 'Not to be given to cats'); tablet mg strength pending Vivaldis insert.",
       "sourceUrl": "https://www.pets-lifestyle.com/collections/cardiac-care",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED TABLET STRENGTH: Dose verified in blueprint; confirm exact mg/tab from Vivaldis pack insert."
+      "auditNote": "UNVERIFIED TABLET STRENGTH: Dose verified in blueprint; confirm exact mg/tab from Vivaldis pack insert.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 0.2-0.3 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "robenatail-6",
@@ -2506,7 +2644,13 @@
       "sourceCitation": "Blueprint Table (Once-daily feline dosing; exact mg/tab & mg/kg unprinted in Vivaldis web snippet).",
       "sourceUrl": "https://www.bsava.com/formulary/",
       "lastReviewed": null,
-      "auditNote": "UNVERIFIED LEAFLET: Confirm exact mg/tab and mg/kg range from Vivaldis physical leaflet."
+      "auditNote": "UNVERIFIED LEAFLET: Confirm exact mg/tab and mg/kg range from Vivaldis physical leaflet.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 1-2.4 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ban-granim-p",
@@ -2568,7 +2712,13 @@
       "sourceCitation": "Blueprint Statutory Blocklist Table (S.O. 5633(E), 30 Dec 2024).",
       "sourceUrl": "https://kngtechlaw.com/blog/prohibited-drugs-india-nimesulide-chloramphenicol-nitrofurans-drug-law",
       "lastReviewed": "Blueprint Blocklist",
-      "auditNote": "Hard Statutory Block under S.O. 5633(E)."
+      "auditNote": "Hard Statutory Block under S.O. 5633(E).",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 1-2 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ban-ketoprofen",
@@ -2628,7 +2778,13 @@
       "sourceCitation": "Blueprint Statutory Blocklist Table (S.O. 3448(E), 31 Jul 2023).",
       "sourceUrl": "https://save-vultures.org/2023/08/save-commends-indias-gazette-notification-of-aceclofenac-and-ketoprofen-ban/",
       "lastReviewed": "Blueprint Blocklist",
-      "auditNote": "Hard Statutory Block across all species."
+      "auditNote": "Hard Statutory Block across all species.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 3-3 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ban-diclofenac",
@@ -2688,7 +2844,13 @@
       "sourceCitation": "Blueprint Statutory Blocklist Table (G.S.R. 499(E) & G.S.R. 558(E)).",
       "sourceUrl": "https://indiankanoon.org/doc/194709922/",
       "lastReviewed": "Blueprint Blocklist",
-      "auditNote": "Hard Statutory Block across all species."
+      "auditNote": "Hard Statutory Block across all species.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 2.5-2.5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ban-colistin",
@@ -2746,7 +2908,13 @@
       "sourceCitation": "Blueprint Statutory Blocklist Table (S.O. 2607(E), 19 Jul 2019).",
       "sourceUrl": "https://leap.unep.org/en/countries/in/national-legislation/notification-ban-colistin-food-producing-animals-poultry-aqua",
       "lastReviewed": "Blueprint Blocklist",
-      "auditNote": "Hard Statutory Block for all food-producing animals, poultry, aquaculture, and feed supplements."
+      "auditNote": "Hard Statutory Block for all food-producing animals, poultry, aquaculture, and feed supplements.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 5-5 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     },
     {
       "id": "ban-chloramphenicol",
@@ -2804,7 +2972,13 @@
       "sourceCitation": "Blueprint Statutory Blocklist Table & FSSAI 2024 First Amendment.",
       "sourceUrl": "https://fssai.gov.in/docs/food-law/regulations/amendments/contaminants-toxins/2_Notification%20dt%2017_10_2024.pdf",
       "lastReviewed": "Blueprint Blocklist",
-      "auditNote": "Hard Statutory Block whenever food_producing_flag = TRUE."
+      "auditNote": "Hard Statutory Block whenever food_producing_flag = TRUE.",
+      "formularyReferences": [
+        "Plumb's Veterinary Drug Handbook (current edition) — verify species-specific dosing range and cautions",
+        "BSAVA Small Animal Formulary / Merck Veterinary Manual as applicable — verify before clinical use",
+        "Manufacturer package insert/leaflet for marketed formulation — primary source for strength, indications, and withdrawal"
+      ],
+      "referenceDosingNote": "Catalog reference range: 25-50 mg/kg. Cross-check against Plumb's/BSAVA and the physical product leaflet before use."
     }
   ]
 }

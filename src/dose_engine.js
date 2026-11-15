@@ -500,12 +500,15 @@
 
     if (unitGuard.doseValid) {
       if (baseDoseRate > spProtocol.maxSingleDose + 0.0001) {
-        hardBlocks.push('MAX SINGLE DOSE EXCEEDED BLOCK: Entered single dose (' + baseDoseRate.toFixed(2) + ' ' + spProtocol.unit + ') exceeds species maximum single dose of ' + spProtocol.maxSingleDose + ' ' + spProtocol.unit + ' for ' + spMeta.label + '.');
+        hardBlocks.push('SAFETY CEILING HARD-STOP: Entered single dose (' + baseDoseRate.toFixed(2) + ' ' + spProtocol.unit + ') exceeds the maximum therapeutic single-dose limit of ' + spProtocol.maxSingleDose + ' ' + spProtocol.unit + ' for ' + spMeta.label + '. Dose input restricted.');
       } else if (baseDoseRate < spProtocol.minSingleDose - 0.0001) {
         softWarnings.push('Sub-therapeutic Dose Warning: Entered dose (' + baseDoseRate.toFixed(2) + ' ' + spProtocol.unit + ') is below standard minimum ' + spProtocol.minSingleDose + ' ' + spProtocol.unit + '.');
       }
       if (spProtocol.maxDailyDose && dailyDoseMgKg > spProtocol.maxDailyDose + 0.0001) {
-        hardBlocks.push('MAX DAILY DOSE CEILING EXCEEDED BLOCK: Regimen (' + effectiveDoseRate.toFixed(2) + ' ' + spProtocol.unit + ' × ' + dosesPerDay + '/day = ' + dailyDoseMgKg.toFixed(2) + ' ' + spProtocol.unit + '/day) exceeds maximum safe 24-hour ceiling of ' + spProtocol.maxDailyDose + ' ' + spProtocol.unit + '/day for ' + spMeta.label + '!');
+        hardBlocks.push('SAFETY CEILING HARD-STOP: Regimen (' + effectiveDoseRate.toFixed(2) + ' ' + spProtocol.unit + ' × ' + dosesPerDay + '/day = ' + dailyDoseMgKg.toFixed(2) + ' ' + spProtocol.unit + '/day) exceeds the maximum therapeutic 24-hour ceiling of ' + spProtocol.maxDailyDose + ' ' + spProtocol.unit + '/day for ' + spMeta.label + '. Dose input restricted.');
+      }
+      if (effectiveDoseRate > spProtocol.maxSingleDose + 0.0001) {
+        hardBlocks.push('SAFETY CEILING HARD-STOP: Effective per-dose rate (' + effectiveDoseRate.toFixed(2) + ' ' + spProtocol.unit + ') exceeds the maximum therapeutic single-dose limit of ' + spProtocol.maxSingleDose + ' ' + spProtocol.unit + ' for ' + spMeta.label + '.');
       }
     }
     if (spProtocol.maxDurationDays && durationDays > spProtocol.maxDurationDays) {
