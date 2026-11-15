@@ -3057,12 +3057,37 @@ function setAppLanguage(lang) {
     const btn = document.getElementById('lang-btn-' + l);
     if (!btn) return;
     btn.className = (l === lang)
-      ? 'px-2 py-0.5 rounded bg-teal-500 text-slate-950 font-bold'
-      : 'px-2 py-0.5 rounded text-amber-200 hover:text-white font-semibold';
+      ? 'px-2 py-1 rounded bg-teal-600 text-white font-bold'
+      : 'px-2 py-1 rounded text-slate-700 hover:text-slate-900 font-semibold';
   });
 
   logUiChange('ui_language', lang.toUpperCase());
   recalculateAll();
+}
+
+function navigatePrimaryWorkspace(target) {
+  const doseCard = document.getElementById('nav-card-dose');
+  const rxCard = document.getElementById('nav-card-rx');
+  const wsCard = document.getElementById('nav-card-workspace');
+  const subnav = document.getElementById('workspace-subnav');
+  [doseCard, rxCard, wsCard].forEach(c => c && c.classList.remove('active'));
+  if (target === 'dosage') {
+    if (doseCard) doseCard.classList.add('active');
+    if (subnav) subnav.classList.add('hidden');
+    switchMainTab('dosage');
+    return;
+  }
+  if (target === 'rx') {
+    if (rxCard) rxCard.classList.add('active');
+    if (subnav) subnav.classList.add('hidden');
+    switchMainTab('rx');
+    return;
+  }
+  if (target === 'workspace') {
+    if (wsCard) wsCard.classList.add('active');
+    if (subnav) subnav.classList.remove('hidden');
+    switchMainTab('catalog');
+  }
 }
 
 function switchMainTab(tabName) {
@@ -3075,17 +3100,38 @@ function switchMainTab(tabName) {
   tabs.forEach(t => {
     const panel = document.getElementById('tab-panel-' + t);
     const btn = document.getElementById('tab-btn-' + t);
-    if (!panel || !btn) return;
+    if (!panel) return;
+    if (t === tabName) panel.classList.remove('hidden');
+    else panel.classList.add('hidden');
+    if (!btn) return;
     if (t === tabName) {
-      panel.classList.remove('hidden');
       btn.setAttribute('aria-selected', 'true');
       btn.className = 'nav-tab-btn py-2 px-1 text-xs font-bold border-t-2 border-teal-400 text-teal-300 flex flex-col items-center justify-center gap-0.5 truncate';
     } else {
-      panel.classList.add('hidden');
       btn.setAttribute('aria-selected', 'false');
       btn.className = 'nav-tab-btn py-2 px-1 text-xs font-medium border-t-2 border-transparent text-slate-400 hover:text-slate-200 flex flex-col items-center justify-center gap-0.5 truncate';
     }
   });
+
+  // Sync primary 3-card nav state
+  const doseCard = document.getElementById('nav-card-dose');
+  const rxCard = document.getElementById('nav-card-rx');
+  const wsCard = document.getElementById('nav-card-workspace');
+  const subnav = document.getElementById('workspace-subnav');
+  const wsTabs = ['fluids', 'cri', 'cpr', 'catalog', 'tests'];
+  [doseCard, rxCard, wsCard].forEach(c => c && c.classList.remove('active'));
+  if (tabName === 'dosage') {
+    if (doseCard) doseCard.classList.add('active');
+    if (subnav) subnav.classList.add('hidden');
+  } else if (tabName === 'rx') {
+    if (rxCard) rxCard.classList.add('active');
+    if (subnav) subnav.classList.add('hidden');
+  } else if (wsTabs.includes(tabName)) {
+    if (wsCard) wsCard.classList.add('active');
+    if (subnav) subnav.classList.remove('hidden');
+  } else {
+    if (subnav) subnav.classList.add('hidden');
+  }
 }
 
 function isValidLicenseKey(key) {
