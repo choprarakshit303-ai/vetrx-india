@@ -3322,88 +3322,136 @@ window.VETRX_CATALOG_DATA = {"catalogVersion":"3.0.0","schemaVersion":"2026.7.0"
 
   const I18N_DICT = {
     en: {
-      appTitle: 'VetRx India — Student Clinical Decision-Support & Dosage Sandbox',
-      disclaimerBanner: 'STUDENT & DECISION-SUPPORT TOOL ONLY: Preloaded profiles are unlicensed academic placeholders. Verify all doses against Plumb\'s, BSAVA, or physical package inserts. Not for use on real patients without a Registered Veterinary Practitioner.',
-      tabDosage: '1. Dosage & 7-Stage Pipeline',
-      tabFluids: '2. AAHA 2024 Fluids & KCl Clamp',
-      tabCri: '3. CRI & Dextrose Engine',
-      tabCpr: '4. RECOVER 2024 CPR & Crash Cart',
-      tabCatalog: '5. Indian SKU Catalog & CDSCO Bans',
-      tabRx: '6. e-Prescription & H1/X/DPDP Logs',
-      tabTests: '7. Golden Test Vectors (TC-01–16)',
+      appTitle: 'VetRx India',
+      disclaimerBanner: 'Educational & Decision-Support Aid Only: Built for veterinary students and clinicians as a study and calculation check. Not for autonomous real-patient prescribing without physical leaflet verification. Under the IVC Act, 1984, a Registered Veterinary Practitioner retains sole responsibility.',
+      tabDosage: '1. Dosage',
+      tabFluids: '2. Fluids',
+      tabCri: '3. CRI',
+      tabCpr: '4. CPR',
+      tabCatalog: '5. Catalog',
+      tabRx: '6. e-Rx',
+      tabTests: '7. Tests (16/16)',
       step1Btn: 'Step 1: Patient & Weight',
       step2Btn: 'Step 2: Drug & Regimen',
       step3Btn: 'Step 3: Withdrawal & Queue',
-      stepAllBtn: 'All Steps View',
-      resultCardTitle: 'Live Dose Output & Safety Gate Summary',
-      detailsSummaryToggle: 'Show Detailed Pharmacokinetic, BSA & Pack Breakdown',
-      studyModeLabel: 'Student Study Mode (Allow Unverified Reference Monographs with Warning)',
-      withdrawalTitle: 'Mandatory Food-Safety Milk & Meat Withdrawal Safe-Date Calculator',
+      stepAllBtn: 'All Steps (Desktop View)',
+      liveResultTitle: 'Live Dose Output & Safety Gate Summary (Hidden When Blocked)',
+      collapseDetails: '▸ Show Pharmacokinetic, IBW/BSA & Pack Supply Details',
+      card1Title: 'Practitioner Sign-In (IVC Act 1984) & PBKDF2 DPDP Gate',
+      card2Title: 'Patient, Species BCS, Heart-Girth & Organ Scaling',
+      card3Title: 'Species-Specific SKU Dosing, Route Lock, Pack Supply & Withdrawal Engine',
+      pinLabel: 'Session Encryption PIN / Passphrase (PBKDF2-SHA256)',
+      pinApplyBtn: 'Set Encryption PIN',
+      studyModeToggle: 'Student Study Mode: Allow Unverified Reference Monographs with Warning',
+      withdrawalTitle: 'Mandatory Food-Safety Milk & Meat Withdrawal Safe-Date Calculator (FSSAI 2025)',
       safeMilkLabel: 'Safe Milk Consumption / Sale From:',
       safeMeatLabel: 'Safe Meat Slaughter / Sale From:',
-      whatsappShareBtn: 'Share via WhatsApp (Trilingual + QR)',
-      sectionFluidsTitle: 'Two-Phase Compartmental Fluid Engine, 100 mL Burette & 15% KCl Clamping',
-      sectionCriTitle: 'Syringe Pump vs. Carrier Bag CRI, Multi-Unit Selector & Dilution Lab',
-      sectionCprTitle: '2024 RECOVER CPR Emergency Crash Cart & 3–5 Min Epinephrine Timer',
-      sectionCatalogTitle: 'Indian SKU Catalog, Provenance Audit, Changelog & ADR Logger',
-      sectionRxTitle: 'Clinical Worksheet Preview, Scannable QR & IndexedDB Backup/Restore',
-      sectionTestsTitle: '16 Automated Golden Test Vectors (Direct VetDoseEngine Calls)'
+      rxQueueTitle: 'Active Prescription Line Items (Patient-Bound & Duplicate-Class Checked)',
+      addRxBtn: 'Add Verified Item to Prescription',
+      clearListBtn: 'Clear List',
+      signPreviewBtn: 'Sign & Preview Statutory Rx',
+      whatsappBtn: '📲 Share via WhatsApp (Trilingual + QR Hash)',
+      saveCaseBtn: '💾 Save Case (IndexedDB)',
+      backupExportBtn: '📤 Export IndexedDB Backup (.json)',
+      backupImportBtn: '📥 Restore IndexedDB Backup (.json)',
+      changelogTitle: 'Catalog Version & Provenance Changelog (v3.0.0)',
+      fluidsTitle: 'Two-Phase Compartmental Fluid Engine, 100 mL Burette Guard & 15% KCl (2 mEq/mL) Clamping',
+      criTitle: 'Syringe Pump vs. Carrier Bag CRI (mcg/kg/min, /hr, /day), Max-Rate Check & Dilution Lab',
+      cprTitle: 'All-Drug Vial Concentration Selectors, 3–5 Min Epinephrine Timer & Exportable Code Sheet',
+      catalogTitle: 'Commercial Indian SKUs, Honest Source Provenance & Custom CSV/JSON Import',
+      adrTitle: 'Adverse Drug Reaction (ADR) & Excipient Toxicity Logger',
+      caseHistoryTitle: 'Persistent Case History (IndexedDB + PBKDF2 AES-256 PII)',
+      registersTitle: 'Persistent In-Clinic Dispensing & Audit Registers',
+      testsTitle: 'Golden Test Vectors (TC-01 to TC-16): Direct VetDoseEngine Invocations (Zero Inline Math)',
+      rerunTestsBtn: 'Re-Run All 16 Vectors'
     },
     hi: {
-      appTitle: 'VetRx इंडिया — पशु चिकित्सा छात्र निर्णय-सहायता और खुराक कैलकुलेटर',
-      disclaimerBanner: 'केवल शैक्षिक और निर्णय-सहायता उपकरण: यह ऐप पशु चिकित्सा छात्रों के अध्ययन और गणना अभ्यास के लिए है। किसी भी वास्तविक पशु पर उपयोग से पहले भौतिक दवा पर्ची (Leaflet), Plumb\'s या BSAVA से मिलान करें।',
-      tabDosage: '1. खुराक और 7-चरणीय सुरक्षा',
-      tabFluids: '2. AAHA 2024 फ्लूइड और KCl',
-      tabCri: '3. CRI और डाइल्यूशन लैब',
-      tabCpr: '4. RECOVER 2024 CPR इमरजेंसी',
-      tabCatalog: '5. दवा सूची, गजट और ADR',
-      tabRx: '6. वर्कशीट, QR और डेटा बैकअप',
-      tabTests: '7. गोल्डन टेस्ट (TC-01–16)',
+      appTitle: 'VetRx इंडिया',
+      disclaimerBanner: 'केवल शैक्षिक और निर्णय-सहायता उपकरण: पशु चिकित्सा छात्रों और चिकित्सकों के अध्ययन व गणना जाँच हेतु। भौतिक लीफलेट सत्यापन के बिना वास्तविक रोगी के नुस्खे हेतु नहीं। IVC Act, 1984 के तहत पंजीकृत पशु चिकित्सक की पूर्ण जिम्मेदारी रहती है।',
+      tabDosage: '1. खुराक',
+      tabFluids: '2. फ्लूइड',
+      tabCri: '3. CRI',
+      tabCpr: '4. CPR',
+      tabCatalog: '5. कैटलॉग',
+      tabRx: '6. e-Rx',
+      tabTests: '7. टेस्ट (16/16)',
       step1Btn: 'चरण 1: पशु और वजन',
       step2Btn: 'चरण 2: दवा और खुराक',
-      step3Btn: 'चरण 3: निकासी तिथि और सूची',
-      stepAllBtn: 'सभी चरण एक साथ देखें',
-      resultCardTitle: 'त्वरित खुराक परिणाम और सुरक्षा सारांश',
-      detailsSummaryToggle: 'विस्तृत गणना, BSA और पैक जानकारी देखें',
-      studyModeLabel: 'छात्र अध्ययन मोड (असत्यापित संदर्भ मोनोग्राफ की गणना चेतावनी के साथ अनुमति दें)',
-      withdrawalTitle: 'अनिवार्य दूध और मांस निकासी (Withdrawal) सुरक्षित तिथि कैलकुलेटर',
-      safeMilkLabel: 'दूध मानव उपयोग / बिक्री के लिए सुरक्षित तिथि:',
-      safeMeatLabel: 'मांस बिक्री के लिए सुरक्षित तिथि:',
-      whatsappShareBtn: 'WhatsApp पर साझा करें (हिंदी/मराठी/अंग्रेजी + QR)',
-      sectionFluidsTitle: 'द्वि-चरणीय फ्लूइड थेरेपी, 100 mL ब्यूरेट और 15% KCl सुरक्षा क्लैंप',
-      sectionCriTitle: 'सीरिंज पंप बनाम फ्लूइड बैग CRI और डाइल्यूशन प्रयोगशाला',
-      sectionCprTitle: '2024 RECOVER CPR आपातकालीन चार्ट और 3–5 मिनट एपिनेफ्रीन टाइमर',
-      sectionCatalogTitle: 'भारतीय दवा सूची, स्रोत सत्यापन, चेंजलॉग और ADR लॉग',
-      sectionRxTitle: 'डिजिटल वर्कशीट, स्कैन करने योग्य QR कोड और IndexedDB बैकअप',
-      sectionTestsTitle: '16 स्वचालित गोल्डन टेस्ट वेक्टर (सीधे VetDoseEngine परीक्षण)'
+      step3Btn: 'चरण 3: निकासी और सूची',
+      stepAllBtn: 'सभी चरण (डेस्कटॉप दृश्य)',
+      liveResultTitle: 'लाइव खुराक परिणाम और सुरक्षा गेट सारांश (ब्लॉक होने पर छिपा)',
+      collapseDetails: '▸ फार्माकोकाइनेटिक, IBW/BSA और पैक विवरण दिखाएँ',
+      card1Title: 'चिकित्सक साइन-इन (IVC Act 1984) और PBKDF2 DPDP गेट',
+      card2Title: 'रोगी, प्रजाति BCS, हार्ट-गर्थ और अंग स्केलिंग',
+      card3Title: 'प्रजाति-विशिष्ट SKU खुराक, रूट लॉक, पैक और निकासी इंजन',
+      pinLabel: 'सेशन एन्क्रिप्शन PIN / पासफ़्रेज़ (PBKDF2-SHA256)',
+      pinApplyBtn: 'एन्क्रिप्शन PIN सेट करें',
+      studyModeToggle: 'छात्र अध्ययन मोड: असत्यापित संदर्भ मोनोग्राफ चेतावनी के साथ अनुमति दें',
+      withdrawalTitle: 'अनिवार्य दूध और मांस निकासी सुरक्षित तिथि कैलकुलेटर (FSSAI 2025)',
+      safeMilkLabel: 'दूध उपभोग / बिक्री हेतु सुरक्षित तिथि:',
+      safeMeatLabel: 'मांस वध / बिक्री हेतु सुरक्षित तिथि:',
+      rxQueueTitle: 'सक्रिय प्रिस्क्रिप्शन आइटम (रोगी-बद्ध और डुप्लिकेट-क्लास जाँच)',
+      addRxBtn: 'सत्यापित आइटम प्रिस्क्रिप्शन में जोड़ें',
+      clearListBtn: 'सूची साफ़ करें',
+      signPreviewBtn: 'साइन करें और वैधानिक Rx देखें',
+      whatsappBtn: '📲 WhatsApp पर साझा करें (त्रिभाषी + QR)',
+      saveCaseBtn: '💾 केस सहेजें (IndexedDB)',
+      backupExportBtn: '📤 IndexedDB बैकअप निर्यात (.json)',
+      backupImportBtn: '📥 IndexedDB बैकअप पुनर्स्थापित (.json)',
+      changelogTitle: 'कैटलॉग संस्करण और स्रोत चेंजलॉग (v3.0.0)',
+      fluidsTitle: 'द्वि-चरणीय फ्लूइड इंजन, 100 mL ब्यूरेट गार्ड और 15% KCl (2 mEq/mL) क्लैंप',
+      criTitle: 'सिरिंज पंप बनाम कैरियर बैग CRI (mcg/kg/min, /hr, /day), अधिकतम दर जाँच और डाइल्यूशन लैब',
+      cprTitle: 'सभी-दवा वायल सांद्रता चयनकर्ता, 3–5 मिनट एपिनेफ्रीन टाइमर और एक्सपोर्टेबल कोड शीट',
+      catalogTitle: 'भारतीय SKU, ईमानदार स्रोत सत्यापन और कस्टम CSV/JSON आयात',
+      adrTitle: 'प्रतिकूल दवा प्रतिक्रिया (ADR) और एक्सिपिएंट विषाक्तता लॉगर',
+      caseHistoryTitle: 'स्थायी केस इतिहास (IndexedDB + PBKDF2 AES-256 PII)',
+      registersTitle: 'स्थायी डिस्पेंसिंग और ऑडिट रजिस्टर',
+      testsTitle: 'गोल्डन टेस्ट वेक्टर (TC-01 से TC-16): सीधे VetDoseEngine कॉल (शून्य इनलाइन गणित)',
+      rerunTestsBtn: 'सभी 16 वेक्टर फिर चलाएँ'
     },
     mr: {
-      appTitle: 'VetRx इंडिया — पशुवैद्यकीय विद्यार्थी निर्णय-सहाय्य आणि डोस कॅल्क्युलेटर',
-      disclaimerBanner: 'केवळ शैक्षणिक आणि निर्णय-सहाय्य साधन: हे ॲप पशुवैद्यकीय विद्यार्थ्यांच्या अभ्यासासाठी आहे. प्रत्यक्ष रुग्णावर वापरण्यापूर्वी मूळ औषध पत्रक (Leaflet), Plumb\'s किंवा BSAVA मधून खात्री करा.',
-      tabDosage: '1. डोस आणि 7-स्तरीय सुरक्षा',
-      tabFluids: '2. AAHA 2024 फ्लुइड आणि KCl',
-      tabCri: '3. CRI आणि डायल्युशन लॅब',
-      tabCpr: '4. RECOVER 2024 CPR आपत्कालीन',
-      tabCatalog: '5. औषध सूची, राजपत्र आणि ADR',
-      tabRx: '6. वर्कशीट, QR आणि डेटा बॅकअप',
-      tabTests: '7. गोल्डन टेस्ट्स (TC-01–16)',
+      appTitle: 'VetRx इंडिया',
+      disclaimerBanner: 'केवळ शैक्षणिक आणि निर्णय-सहाय्य साधन: पशुवैद्यकीय विद्यार्थी आणि चिकित्सकांसाठी अभ्यास व गणना तपासणीसाठी. भौतिक लीफलेट पडताळणीशिवाय प्रत्यक्ष रुग्णावर प्रिस्क्रिप्शनसाठी नाही. IVC Act, 1984 अंतर्गत नोंदणीकृत पशुवैद्यकाची संपूर्ण जबाबदारी.',
+      tabDosage: '1. डोस',
+      tabFluids: '2. फ्लुइड',
+      tabCri: '3. CRI',
+      tabCpr: '4. CPR',
+      tabCatalog: '5. कॅटलॉग',
+      tabRx: '6. e-Rx',
+      tabTests: '7. टेस्ट (16/16)',
       step1Btn: 'टप्पा 1: प्राणी आणि वजन',
       step2Btn: 'टप्पा 2: औषध आणि मात्रा',
-      step3Btn: 'टप्पा 3: विथड्रॉवल तारीख आणि यादी',
-      stepAllBtn: 'सर्व टप्पे एकत्र पहा',
-      resultCardTitle: 'तात्काळ डोस निकाल आणि सुरक्षा सारांश',
-      detailsSummaryToggle: 'सविस्तर गणना, BSA आणि पॅक माहिती पहा',
-      studyModeLabel: 'विद्यार्थी अभ्यास मोड (असत्यापित संदर्भ मोनोग्राफची गणना इशाऱ्यासह करण्याची परवानगी द्या)',
-      withdrawalTitle: 'अनिवार्य दूध आणि मांस विथड्रॉवल (Withdrawal) सुरक्षित तारीख कॅल्क्युलेटर',
-      safeMilkLabel: 'दूध विक्री / वापरासाठी सुरक्षित तारीख:',
-      safeMeatLabel: 'मांस विक्रीसाठी सुरक्षित तारीख:',
-      whatsappShareBtn: 'WhatsApp वर शेअर करा (मराठी/हिंदी/इंग्रजी + QR)',
-      sectionFluidsTitle: 'द्वि-स्तरीय फ्लुइड थेरपी, 100 mL ब्युरेट आणि 15% KCl सुरक्षा क्लॅम्प',
-      sectionCriTitle: 'सिरिंज पंप विरुद्ध फ्लुइड बॅग CRI आणि डायल्युशन लॅब',
-      sectionCprTitle: '2024 RECOVER CPR आपत्कालीन तक्ता आणि 3–5 मिनिट एपिनेफ्रिन टाइमर',
-      sectionCatalogTitle: 'भारतीय औषध सूची, स्रोत पडताळणी, चेंजलॉग आणि ADR लॉग',
-      sectionRxTitle: 'डिजिटल वर्कशीट, स्कॅन करण्यायोग्य QR कोड आणि IndexedDB बॅकअप',
-      sectionTestsTitle: '16 स्वयंचलित गोल्डन टेस्ट व्हेक्टर्स (थेट VetDoseEngine चाचण्या)'
+      step3Btn: 'टप्पा 3: विथड्रॉवल आणि यादी',
+      stepAllBtn: 'सर्व टप्पे (डेस्कटॉप दृश्य)',
+      liveResultTitle: 'थेट डोस निकाल आणि सुरक्षा गेट सारांश (ब्लॉक असल्यास लपवलेले)',
+      collapseDetails: '▸ फार्माकोकिनेटिक, IBW/BSA आणि पॅक तपशील दाखवा',
+      card1Title: 'प्रॅक्टिशनर साइन-इन (IVC Act 1984) आणि PBKDF2 DPDP गेट',
+      card2Title: 'रुग्ण, प्रजाती BCS, हार्ट-गर्थ आणि ऑर्गन स्केलिंग',
+      card3Title: 'प्रजाती-विशिष्ट SKU डोस, रूट लॉक, पॅक आणि विथड्रॉवल इंजिन',
+      pinLabel: 'सेशन एन्क्रिप्शन PIN / पासफ्रेज (PBKDF2-SHA256)',
+      pinApplyBtn: 'एन्क्रिप्शन PIN सेट करा',
+      studyModeToggle: 'विद्यार्थी अभ्यास मोड: असत्यापित संदर्भ मोनोग्राफ इशाऱ्यासह परवानगी द्या',
+      withdrawalTitle: 'अनिवार्य दूध आणि मांस विथड्रॉवल सुरक्षित तारीख कॅल्क्युलेटर (FSSAI 2025)',
+      safeMilkLabel: 'दूध वापर / विक्रीसाठी सुरक्षित तारीख:',
+      safeMeatLabel: 'मांस कत्तल / विक्रीसाठी सुरक्षित तारीख:',
+      rxQueueTitle: 'सक्रिय प्रिस्क्रिप्शन आयटम (रुग्ण-बद्ध आणि डुप्लिकेट-क्लास तपासणी)',
+      addRxBtn: 'सत्यापित आयटम प्रिस्क्रिप्शनमध्ये जोडा',
+      clearListBtn: 'यादी साफ करा',
+      signPreviewBtn: 'स्वाक्षरी करा आणि वैधानिक Rx पाहा',
+      whatsappBtn: '📲 WhatsApp वर शेअर करा (त्रिभाषिक + QR)',
+      saveCaseBtn: '💾 केस जतन करा (IndexedDB)',
+      backupExportBtn: '📤 IndexedDB बॅकअप निर्यात (.json)',
+      backupImportBtn: '📥 IndexedDB बॅकअप पुनर्संचयित (.json)',
+      changelogTitle: 'कॅटलॉग आवृत्ती आणि स्रोत चेंजलॉग (v3.0.0)',
+      fluidsTitle: 'द्वि-स्तरीय फ्लुइड इंजिन, 100 mL ब्युरेट गार्ड आणि 15% KCl (2 mEq/mL) क्लॅम्प',
+      criTitle: 'सिरिंज पंप विरुद्ध कॅरियर बॅग CRI (mcg/kg/min, /hr, /day), कमाल दर तपासणी आणि डायल्युशन लॅब',
+      cprTitle: 'सर्व-औषध व्हायल एकाग्रता निवडकर्ता, 3–5 मिनिट एपिनेफ्रिन टाइमर आणि निर्यातयोग्य कोड शीट',
+      catalogTitle: 'भारतीय SKU, प्रामाणिक स्रोत पडताळणी आणि कस्टम CSV/JSON आयात',
+      adrTitle: 'प्रतिकूल औषध प्रतिक्रिया (ADR) आणि एक्सिपिएंट विषारीपणा लॉगर',
+      caseHistoryTitle: 'स्थायी केस इतिहास (IndexedDB + PBKDF2 AES-256 PII)',
+      registersTitle: 'स्थायी डिस्पेंसिंग आणि ऑडिट नोंदवह्या',
+      testsTitle: 'गोल्डन टेस्ट व्हेक्टर्स (TC-01 ते TC-16): थेट VetDoseEngine कॉल्स (इनलाइन गणित शून्य)',
+      rerunTestsBtn: 'सर्व 16 व्हेक्टर्स पुन्हा चालवा'
     }
   };
 
@@ -6246,14 +6294,18 @@ function loadQuickPreset(presetId) {
 // =========================================================================
 function setAppLanguage(lang) {
   appState.lang = lang;
-  const dict = (window.VetI18n && window.VetI18n[lang]) || window.VetI18n.en;
+  const dict = (window.VetI18n && window.VetI18n[lang]) || (window.VetI18n && window.VetI18n.en) || {};
   const bindText = (id, val) => {
     const el = document.getElementById(id);
-    if (el && val) el.textContent = val;
+    if (el && typeof val === 'string') el.textContent = val;
   };
 
+  // Header / global chrome
   bindText('i18n-app-title', dict.appTitle);
   bindText('i18n-disclaimer-banner', dict.disclaimerBanner);
+  bindText('i18n-save-case-btn', dict.saveCaseBtn);
+
+  // Tabs (top and bottom nav share IDs)
   bindText('i18n-tab-dosage', dict.tabDosage);
   bindText('i18n-tab-fluids', dict.tabFluids);
   bindText('i18n-tab-cri', dict.tabCri);
@@ -6262,12 +6314,13 @@ function setAppLanguage(lang) {
   bindText('i18n-tab-rx', dict.tabRx);
   bindText('i18n-tab-tests', dict.tabTests);
 
+  // Dosage stepper & cards
   bindText('i18n-step1-btn', dict.step1Btn);
   bindText('i18n-step2-btn', dict.step2Btn);
   bindText('i18n-step3-btn', dict.step3Btn);
   bindText('i18n-step-all-btn', dict.stepAllBtn);
   bindText('i18n-live-result-title', dict.liveResultTitle);
-  bindText('i18n-collapse-details', '▸ ' + dict.collapseDetailsSummary);
+  bindText('i18n-collapse-details', dict.collapseDetails);
   bindText('i18n-card1-title', dict.card1Title);
   bindText('i18n-card2-title', dict.card2Title);
   bindText('i18n-card3-title', dict.card3Title);
@@ -6281,17 +6334,18 @@ function setAppLanguage(lang) {
   bindText('i18n-add-rx-btn', dict.addRxBtn);
   bindText('i18n-clear-list-btn', dict.clearListBtn);
   bindText('i18n-sign-preview-btn', dict.signPreviewBtn);
-  bindText('i18n-whatsapp-btn', '📲 ' + dict.whatsappShareBtn);
-  bindText('i18n-save-case-btn', '💾 ' + dict.saveCaseBtn);
-  bindText('i18n-backup-export-btn', '📤 ' + dict.backupExportBtn);
-  bindText('i18n-backup-import-btn', '📥 ' + dict.backupImportBtn);
-  bindText('i18n-changelog-title', dict.changelogTitle);
+  bindText('i18n-whatsapp-btn', dict.whatsappBtn);
+
+  // Section titles
   bindText('i18n-fluids-title', dict.fluidsTitle);
   bindText('i18n-cri-title', dict.criTitle);
   bindText('i18n-cpr-title', dict.cprTitle);
   bindText('i18n-catalog-title', dict.catalogTitle);
+  bindText('i18n-changelog-title', dict.changelogTitle);
   bindText('i18n-adr-title', dict.adrTitle);
   bindText('i18n-case-history-title', dict.caseHistoryTitle);
+  bindText('i18n-backup-export-btn', dict.backupExportBtn);
+  bindText('i18n-backup-import-btn', dict.backupImportBtn);
   bindText('i18n-registers-title', dict.registersTitle);
   bindText('i18n-tests-title', dict.testsTitle);
   bindText('i18n-rerun-tests-btn', dict.rerunTestsBtn);

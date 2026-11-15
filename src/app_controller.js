@@ -2831,14 +2831,18 @@ function loadQuickPreset(presetId) {
 // =========================================================================
 function setAppLanguage(lang) {
   appState.lang = lang;
-  const dict = (window.VetI18n && window.VetI18n[lang]) || window.VetI18n.en;
+  const dict = (window.VetI18n && window.VetI18n[lang]) || (window.VetI18n && window.VetI18n.en) || {};
   const bindText = (id, val) => {
     const el = document.getElementById(id);
-    if (el && val) el.textContent = val;
+    if (el && typeof val === 'string') el.textContent = val;
   };
 
+  // Header / global chrome
   bindText('i18n-app-title', dict.appTitle);
   bindText('i18n-disclaimer-banner', dict.disclaimerBanner);
+  bindText('i18n-save-case-btn', dict.saveCaseBtn);
+
+  // Tabs (top and bottom nav share IDs)
   bindText('i18n-tab-dosage', dict.tabDosage);
   bindText('i18n-tab-fluids', dict.tabFluids);
   bindText('i18n-tab-cri', dict.tabCri);
@@ -2847,12 +2851,13 @@ function setAppLanguage(lang) {
   bindText('i18n-tab-rx', dict.tabRx);
   bindText('i18n-tab-tests', dict.tabTests);
 
+  // Dosage stepper & cards
   bindText('i18n-step1-btn', dict.step1Btn);
   bindText('i18n-step2-btn', dict.step2Btn);
   bindText('i18n-step3-btn', dict.step3Btn);
   bindText('i18n-step-all-btn', dict.stepAllBtn);
   bindText('i18n-live-result-title', dict.liveResultTitle);
-  bindText('i18n-collapse-details', '▸ ' + dict.collapseDetailsSummary);
+  bindText('i18n-collapse-details', dict.collapseDetails);
   bindText('i18n-card1-title', dict.card1Title);
   bindText('i18n-card2-title', dict.card2Title);
   bindText('i18n-card3-title', dict.card3Title);
@@ -2866,17 +2871,18 @@ function setAppLanguage(lang) {
   bindText('i18n-add-rx-btn', dict.addRxBtn);
   bindText('i18n-clear-list-btn', dict.clearListBtn);
   bindText('i18n-sign-preview-btn', dict.signPreviewBtn);
-  bindText('i18n-whatsapp-btn', '📲 ' + dict.whatsappShareBtn);
-  bindText('i18n-save-case-btn', '💾 ' + dict.saveCaseBtn);
-  bindText('i18n-backup-export-btn', '📤 ' + dict.backupExportBtn);
-  bindText('i18n-backup-import-btn', '📥 ' + dict.backupImportBtn);
-  bindText('i18n-changelog-title', dict.changelogTitle);
+  bindText('i18n-whatsapp-btn', dict.whatsappBtn);
+
+  // Section titles
   bindText('i18n-fluids-title', dict.fluidsTitle);
   bindText('i18n-cri-title', dict.criTitle);
   bindText('i18n-cpr-title', dict.cprTitle);
   bindText('i18n-catalog-title', dict.catalogTitle);
+  bindText('i18n-changelog-title', dict.changelogTitle);
   bindText('i18n-adr-title', dict.adrTitle);
   bindText('i18n-case-history-title', dict.caseHistoryTitle);
+  bindText('i18n-backup-export-btn', dict.backupExportBtn);
+  bindText('i18n-backup-import-btn', dict.backupImportBtn);
   bindText('i18n-registers-title', dict.registersTitle);
   bindText('i18n-tests-title', dict.testsTitle);
   bindText('i18n-rerun-tests-btn', dict.rerunTestsBtn);
