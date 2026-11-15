@@ -750,6 +750,37 @@ function recalculateAll() {
 
   const alertsBox = document.getElementById('statutory-gate-alerts');
   alertsBox.innerHTML = '';
+
+  // Automated safety warning guardrails for dosage extremes
+  try {
+    const sp = engineRes.spProtocol || {};
+    const sel = parseFloat(engineRes.selectedDose);
+    const minD = parseFloat(sp.minSingleDose);
+    const maxD = parseFloat(sp.maxSingleDose);
+    if (isFinite(sel) && isFinite(minD) && isFinite(maxD) && maxD > 0) {
+      if (sel >= maxD) {
+        const d = document.createElement('div');
+        d.setAttribute('role', 'alert');
+        d.className = 'p-3 rounded-lg bg-amber-50 border-l-4 border-amber-600 text-amber-950 text-xs font-semibold flex items-start gap-2';
+        d.innerHTML = '<span class="font-bold text-amber-800 shrink-0">[DOSAGE EXTREME GUARDRAIL]</span><span>Selected dose is at the protocol upper bound (' + maxD + ' ' + escapeHtml(sp.unit || engineRes.doseUnit || '') + '). Verify indication, duration, and patient-specific risk before proceeding.</span>';
+        alertsBox.appendChild(d);
+      } else if (sel <= minD) {
+        const d = document.createElement('div');
+        d.setAttribute('role', 'alert');
+        d.className = 'p-3 rounded-lg bg-amber-50 border-l-4 border-amber-600 text-amber-950 text-xs font-semibold flex items-start gap-2';
+        d.innerHTML = '<span class="font-bold text-amber-800 shrink-0">[DOSAGE EXTREME GUARDRAIL]</span><span>Selected dose is at the protocol lower bound (' + minD + ' ' + escapeHtml(sp.unit || engineRes.doseUnit || '') + '). Confirm therapeutic adequacy for the clinical indication.</span>';
+        alertsBox.appendChild(d);
+      }
+      if (engineRes.exceedsTenPct || Math.abs(engineRes.variancePct || 0) >= 10) {
+        const d = document.createElement('div');
+        d.setAttribute('role', 'alert');
+        d.className = 'p-3 rounded-lg bg-orange-50 border-l-4 border-orange-600 text-orange-950 text-xs font-semibold flex items-start gap-2';
+        d.innerHTML = '<span class="font-bold text-orange-800 shrink-0">[DOSAGE EXTREME GUARDRAIL]</span><span>Rounding variance is high (' + (engineRes.variancePct >= 0 ? '+' : '') + (engineRes.variancePct || 0).toFixed(1) + '%). Recheck formulation strength/splitting or consider an alternative formulation to reduce dosing error.</span>';
+        alertsBox.appendChild(d);
+      }
+    }
+  } catch (e) {}
+
   allHardBlocks.forEach(msg => {
     const d = document.createElement('div');
     d.setAttribute('role', 'alert');
@@ -1243,7 +1274,7 @@ function startNewUnsignedPrescription() {
 }
 
 // =========================================================================
-// DIGITAL PRESCRIPTION GENERATOR MODULE (Clean Printable Clinical Slip)
+// DIGITAL PRESCRIPTION GENERATOR MODULE (Interactive, Printable Clinical Slip)
 // =========================================================================
 function getWithdrawalPeriodText(wdInfo, isFoodProducing) {
   if (!isFoodProducing || !wdInfo) return 'N/A (non-food animal or not applicable)';
@@ -1252,9 +1283,31 @@ function getWithdrawalPeriodText(wdInfo, isFoodProducing) {
   return 'Milk: ' + milk + ' | Meat: ' + meat;
 }
 
-function generateDigitalPrescriptionSlip() {
+function renderWithdrawalAlertHtml(wdInfo, spMeta) {
+  if (!spMeta || !spMeta.foodProducing || !wdInfo) return '';
+  const en = wdInfo.trilingualSummary && wdInfo.trilingualSummary.en ? wdInfo.trilingualSummary.en : getWithdrawalPeriodText(wdInfo, true);
+  const hi = wdInfo.trilingualSummary && wdInfo.trilingualSummary.hi ? wdInfo.trilingualSummary.hi : '';
+  const mr = wdInfo.trilingualSummary && wdInfo.trilingualSummary.mr ? wdInfo.trilingualSummary.mr : '';
+  return (
+    '<div class="p-3 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-950 space-y-1">' +
+      '<div class="font-extrabold text-xs uppercase tracking-wide">Livestock Withdrawal Alert (Milk/Meat)</div>' +
+      '<div class="text-xs"><strong>EN:</strong> ' + escapeHtml(en) + '</div>' +
+      (hi ? '<div class="text-xs"><strong>हिन्दी:</strong> ' + escapeHtml(hi) + '</div>' : '') +
+      (mr ? '<div class="text-xs"><strong>मराठी:</strong> ' + escapeHtml(mr) + '</div>' : '') +
+    '</div>'
+  );
+}
+
+function generateDigitalPrescriptionSlip(opts) {
   const container = document.getElementById('digital-prescription-slip-area');
   if (!container) return;
+  const showWithdrawalAlert = opts && typeof opts.showWithdrawalAlert === 'boolean'
+    ? opts.showWithdrawalAlert
+    : (document.getElementById('slip-show-withdrawal-alert') ? document.getElementById('slip-show-withdrawal-alert').checked : true);
+  const showNotes = opts && typeof opts.showNotes === 'boolean'
+    ? opts.showNotes
+    : (document.getElementById('slip-show-notes') ? document.getElementById('slip-show-notes').checked : true);
+  const silent = !!(opts && opts.silent);
 
   const ownerName = (document.getElementById('client-name')?.value || '').trim() || '—';
   const animalId = (document.getElementById('patient-name')?.value || '').trim() || '—';
@@ -1265,9 +1318,8 @@ function generateDigitalPrescriptionSlip() {
   const prac = appState.signedByPractitioner || getActivePractitioner();
   const c = appState.lastCalculation;
 
-  let doseBlock = '<div class="p-3 rounded border border-dashed border-slate-300 text-slate-500">No valid calculated dosage available. Complete Step 1 & Step 2 to generate a slip.</div>';
-  let withdrawalText = '—';
-  let skuLine = '—';
+  let doseRows = '<tr><td colspan="2" class="border border-slate-300 px-2 py-3 text-slate-500">No valid calculated dosage available. Complete Step 1 & Step 2 to generate a slip.</td></tr>';
+  let withdrawalAlert = '';
 
   if (c && c.sku && c.selectedDose) {
     const headline = c.headlineText || (Number(c.selectedDose).toFixed(2) + ' ' + (c.doseUnit || 'mg/kg'));
@@ -1276,52 +1328,60 @@ function generateDigitalPrescriptionSlip() {
     const freq = c.sku.defaultFreq || '—';
     const duration = c.doseDurationDays || '—';
     const supply = c.totalSupplyText || '—';
-    withdrawalText = getWithdrawalPeriodText(c.wdInfo, !!spMeta.foodProducing);
-    skuLine = escapeHtml(c.sku.brand || '—') + ' (' + escapeHtml(c.sku.inn || '—') + ', ' + escapeHtml(c.sku.strengthVal + ' ' + c.sku.strengthUnit) + ')';
-    doseBlock =
-      '<table class="w-full text-xs border border-slate-300 border-collapse">' +
-        '<tbody>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1 w-1/3">Medication</th><td class="border border-slate-300 px-2 py-1">' + skuLine + '</td></tr>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Calculated Dosage (Sig)</th><td class="border border-slate-300 px-2 py-1 font-semibold mono">' + escapeHtml(headline) + '</td></tr>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Exact Dose</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(exact) + '</td></tr>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Route / Frequency / Duration</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(route) + ' | every ' + escapeHtml(String(freq)) + ' h | ' + escapeHtml(String(duration)) + ' day(s)</td></tr>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Total Supply</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(supply) + '</td></tr>' +
-          '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Withdrawal Period</th><td class="border border-slate-300 px-2 py-1 font-semibold text-amber-900">' + escapeHtml(withdrawalText) + '</td></tr>' +
-        '</tbody>' +
-      '</table>';
+    const localizedFormulation = [c.sku.brand, c.sku.manufacturer ? ('by ' + c.sku.manufacturer) : '', (c.sku.strengthVal + ' ' + c.sku.strengthUnit), c.sku.form ? ('[' + c.sku.form + ']') : ''].filter(Boolean).join(' ');
+    const withdrawalText = getWithdrawalPeriodText(c.wdInfo, !!spMeta.foodProducing);
+    withdrawalAlert = renderWithdrawalAlertHtml(c.wdInfo, spMeta);
+
+    doseRows =
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1 w-1/3">Localized Drug Formulation</th><td class="border border-slate-300 px-2 py-1 font-semibold">' + escapeHtml(localizedFormulation || '—') + '<div class="text-xs text-slate-600 mt-0.5 mono">INN: ' + escapeHtml(c.sku.inn || '—') + ' | Pack: ' + escapeHtml(c.sku.packInfo || '—') + '</div></td></tr>' +
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Calculated Dosage (Sig)</th><td class="border border-slate-300 px-2 py-1 font-semibold mono">' + escapeHtml(headline) + '</td></tr>' +
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Exact Dose</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(exact) + '</td></tr>' +
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Route / Frequency / Duration</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(route) + ' | every ' + escapeHtml(String(freq)) + ' h | ' + escapeHtml(String(duration)) + ' day(s)</td></tr>' +
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Total Supply</th><td class="border border-slate-300 px-2 py-1">' + escapeHtml(supply) + '</td></tr>' +
+      '<tr><th class="border border-slate-300 bg-slate-50 text-left px-2 py-1">Withdrawal Period (Milk/Meat)</th><td class="border border-slate-300 px-2 py-1 font-semibold ' + (spMeta.foodProducing ? 'text-amber-900' : '') + '">' + escapeHtml(withdrawalText) + '</td></tr>';
   }
 
   const rxId = appState.rxId || '—';
   const date = getTodayIsoDate();
   container.innerHTML =
-    '<div id="digital-prescription-slip-printable" class="space-y-3">' +
-      '<div class="flex items-start justify-between border-b-2 border-slate-800 pb-2">' +
-        '<div>' +
-          '<div class="text-xs font-bold uppercase tracking-wider text-slate-600">Clinical Prescription Slip</div>' +
-          '<div class="text-sm font-extrabold text-slate-900">' + escapeHtml(prac.clinicName || 'Veterinary Clinic') + '</div>' +
-          '<div class="text-xs text-slate-700">' + escapeHtml(prac.name || '') + ' • ' + escapeHtml(prac.regNumber || '') + '</div>' +
-        '</div>' +
-        '<div class="text-right text-xs mono">' +
-          '<div><strong>Date:</strong> ' + escapeHtml(date) + '</div>' +
-          '<div><strong>Rx ID:</strong> ' + escapeHtml(rxId) + '</div>' +
+    '<div class="space-y-3">' +
+      '<div class="flex flex-wrap items-center justify-between gap-2 no-print">' +
+        '<div class="text-xs font-semibold text-slate-700">Interactive Slip Options</div>' +
+        '<div class="flex flex-wrap items-center gap-3 text-xs">' +
+          '<label class="flex items-center gap-1.5"><input type="checkbox" id="slip-show-withdrawal-alert" ' + (showWithdrawalAlert ? 'checked ' : '') + 'onchange="generateDigitalPrescriptionSlip({silent:true})" class="rounded text-teal-600" /> Show livestock withdrawal alert</label>' +
+          '<label class="flex items-center gap-1.5"><input type="checkbox" id="slip-show-notes" ' + (showNotes ? 'checked ' : '') + 'onchange="generateDigitalPrescriptionSlip({silent:true})" class="rounded text-teal-600" /> Show clinical note</label>' +
         '</div>' +
       '</div>' +
-      '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">' +
-        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Owner Name:</span> ' + escapeHtml(ownerName) + '</div>' +
-        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Animal ID / Patient:</span> ' + escapeHtml(animalId) + '</div>' +
-        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Species / Breed:</span> ' + escapeHtml(spMeta.label) + ' / ' + escapeHtml(breed) + '</div>' +
-        '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Body Weight:</span> ' + escapeHtml(bw) + ' kg</div>' +
-      '</div>' +
-      doseBlock +
-      '<div class="pt-2 border-t border-slate-300 flex items-end justify-between gap-4 text-xs">' +
-        '<div class="text-slate-600 max-w-md"><strong>Note:</strong> Clinical decision-support slip. Verify against physical leaflet/formulary before dispensing or administration. Practitioner retains sole responsibility.</div>' +
-        '<div class="text-right">' +
-          '<div class="border-t border-slate-500 pt-1 mt-6 w-40 text-slate-700">Veterinarian Signature</div>' +
+      '<div id="digital-prescription-slip-printable" class="space-y-3">' +
+        '<div class="flex items-start justify-between border-b-2 border-slate-800 pb-2">' +
+          '<div>' +
+            '<div class="text-xs font-bold uppercase tracking-wider text-slate-600">Clinical Prescription Slip</div>' +
+            '<div class="text-sm font-extrabold text-slate-900">' + escapeHtml(prac.clinicName || 'Veterinary Clinic') + '</div>' +
+            '<div class="text-xs text-slate-700">' + escapeHtml(prac.name || '') + ' • ' + escapeHtml(prac.regNumber || '') + '</div>' +
+          '</div>' +
+          '<div class="text-right text-xs mono">' +
+            '<div><strong>Date:</strong> ' + escapeHtml(date) + '</div>' +
+            '<div><strong>Rx ID:</strong> ' + escapeHtml(rxId) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">' +
+          '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Owner Name:</span> ' + escapeHtml(ownerName) + '</div>' +
+          '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Animal ID / Patient:</span> ' + escapeHtml(animalId) + '</div>' +
+          '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Species / Breed:</span> ' + escapeHtml(spMeta.label) + ' / ' + escapeHtml(breed) + '</div>' +
+          '<div class="p-2 rounded border border-slate-200 bg-slate-50"><span class="font-bold text-slate-700">Body Weight:</span> ' + escapeHtml(bw) + ' kg</div>' +
+        '</div>' +
+        '<table class="w-full text-xs border border-slate-300 border-collapse"><tbody>' + doseRows + '</tbody></table>' +
+        (showWithdrawalAlert ? withdrawalAlert : '') +
+        '<div class="pt-2 border-t border-slate-300 flex items-end justify-between gap-4 text-xs">' +
+          '<div class="text-slate-600 max-w-md">' + (showNotes ? '<strong>Note:</strong> Clinical decision-support slip. Verify against physical leaflet/formulary before dispensing or administration. Final diagnostic/prescribing liability rests with the licensed practitioner.' : '') + '</div>' +
+          '<div class="text-right">' +
+            '<div class="border-t border-slate-500 pt-1 mt-6 w-40 text-slate-700">Veterinarian Signature</div>' +
+          '</div>' +
         '</div>' +
       '</div>' +
     '</div>';
 
-  showToast('Digital prescription slip generated.', 'teal');
+  if (!silent) showToast('Digital prescription slip generated.', 'teal');
 }
 
 function printDigitalPrescriptionSlip() {
