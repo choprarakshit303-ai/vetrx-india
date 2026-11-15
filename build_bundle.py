@@ -1,75 +1,40 @@
 import os
-import json
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+def read(rel):
+    with open(os.path.join(ROOT, rel), 'r', encoding='utf-8') as f:
+        return f.read()
 
 def build():
-    print("Building vetrx_standalone_final.html...")
-    
-    with open('index.html', 'r') as f:
-        html = f.read()
+    print('Building vetrx_standalone_final.html...')
+    html = read('index.html')
 
     # Inline CSS
-    with open('styles/main.css', 'r') as f:
-        css = f.read()
-    html = html.replace('<link rel="stylesheet" href="styles/main.css" />', f'<style>{css}</style>')
+    css = read('styles/main.css')
+    html = html.replace('<link rel="stylesheet" href="styles/main.css" />', f'<style>\n{css}\n</style>', 1)
 
-    # Inline Catalog
-    with open('data/drug_catalog.json', 'r') as f:
-        catalog_json = f.read()
-    catalog_script = f'<script id="inlined-drug-catalog-json">window.VETRX_CATALOG_DATA = {catalog_json};</script>'
-    html = html.replace('<script>\n    // Load catalog into window.VETRX_CATALOG_DATA\n    async function loadCatalog() {\n      const response = await fetch(\'data/drug_catalog.json\');\n      window.VETRX_CATALOG_DATA = await response.json();\n    }\n  </script>', catalog_script)
+    # Remove manifest link for standalone bundle? keep is fine but optional; leave as-is.
+    # Inline browser catalog data
+    catalog_js = read('data/drug_catalog_browser.js')
+    html = html.replace('<script src="data/drug_catalog_browser.js"></script>',
+                        f'<script id="inlined-drug-catalog-browser">\n{catalog_js}\n</script>', 1)
 
-    # Inline JS Modules
-    js_modules = [
-        ('src/dose_engine.js', 'inlined-dose-engine'),
-        ('src/crypto_storage.js', 'inlined-crypto-storage'),
-        ('src/i18n.js', 'inlined-i18n'),
-        ('src/app_controller.js', 'inlined-app-controller')
+    # Inline JS modules in order
+    replacements = [
+        ('<script src="src/dose_engine.js"></script>', 'inlined-dose-engine', 'src/dose_engine.js'),
+        ('<script src="src/crypto_storage.js"></script>', 'inlined-crypto-storage', 'src/crypto_storage.js'),
+        ('<script src="src/i18n.js"></script>', 'inlined-i18n', 'src/i18n.js'),
+        ('<script src="src/app_controller.js"></script>', 'inlined-app-controller', 'src/app_controller.js'),
     ]
+    for tag, sid, path in replacements:
+        js = read(path)
+        html = html.replace(tag, f'<script id="{sid}">\n{js}\n</script>', 1)
 
-    for file_path, script_id in js_modules:
-        with open(file_path, 'r') as f:
-            code = f.read()
-        html = html.replace(f'<script src="{file_path}"></script>', f'<script id="{script_id}">{code}</script>')
-
-    # Handle QR CDN and Fallback
-    # The user wants an offline fallback. I will add a script that checks for qrcode and provides a fallback.
-    qr_fallback = """
-<script>
-if (typeof qrcode === 'undefined') {
-    console.warn('QR Code Library offline. Using Fallback SHA-256 Text Badge.');
-    window.generateSvgQrCode = function(text) {
-        return '<div class="p-4 border-2 border-slate-300 bg-slate-100 text-slate-800 font-mono text-[10px] break-all">OFFLINE QR FALLBACK: ' + text + '</div>';
-    };
-}
-</script>
-"""
-    html = html.replace('</body>', f'{qr_fallback}</body>')
-
-    # Remove the async bootstrap and replace with sync if needed
-    # In index.html I added:
-    # <script>
-    #   // Bootstrap the app after catalog is loaded
-    #   (async () => {
-    #     await loadCatalog();
-    #   })();
-    # </script>
-    # Since it is now inlined, I can remove this.
-    bootstrap_snippet = """  <script>
-    // Bootstrap the app after catalog is loaded
-    (async () => {
-      await loadCatalog();
-      // app_controller initialization is handled by DOMContentLoaded in the file
-      // but since we fetch the catalog async, we might need to trigger it manually 
-      // or ensure app_controller waits for VETRX_CATALOG_DATA.
-      // Looking at app_controller, it uses window.VETRX_CATALOG_DATA in DOMContentLoaded.
-    })();
-  </script>"""
-    html = html.replace(bootstrap_snippet, "")
-
-    with open('vetrx_standalone_final.html', 'w') as f:
+    out = os.path.join(ROOT, 'vetrx_standalone_final.html')
+    with open(out, 'w', encoding='utf-8') as f:
         f.write(html)
-    
-    print("Build complete: vetrx_standalone_final.html")
+    print(f'Build complete: {out}')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     build()

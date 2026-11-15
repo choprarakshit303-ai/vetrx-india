@@ -92,6 +92,7 @@
         const cipherBytes = new Uint8Array(cipherBuf);
         return {
           algorithm: 'PBKDF2-SHA256(100k)+AES-256-GCM',
+          keyDerivation: 'PBKDF2-HMAC-SHA256 (100k iter)',
           saltBase64: bytesToBase64(salt),
           ivBase64: bytesToBase64(iv),
           ciphertextBase64: bytesToBase64(cipherBytes),
@@ -103,6 +104,7 @@
     const utf8Bytes = new TextEncoder().encode(plaintext);
     return {
       algorithm: 'UTF8-BASE64-DEV-FALLBACK (Non-HTTPS Context)',
+      keyDerivation: 'PBKDF2-HMAC-SHA256 (100k iter)',
       saltBase64: 'U0FMVC1GQUxMQkFDSw==',
       ivBase64: 'AAECAwQFBgcICQoL',
       ciphertextBase64: bytesToBase64(utf8Bytes),

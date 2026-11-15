@@ -1804,7 +1804,7 @@ function renderCatalogChangelog() {
     });
     card.innerHTML =
       '<div class="flex items-center justify-between border-b border-slate-200 pb-1.5">' +
-        '<span class="font-bold text-slate-900">v' + escapeHtml(entry.version) + ' — ' + escapeHtml(entry.title) + '</span>' +
+        '<span class="font-bold text-slate-900">v' + escapeHtml(entry.version) + ' — ' + escapeHtml(entry.summary || entry.title) + '</span>' +
       '</div>' +
       '<ul class="space-y-1">' + bullets + '</ul>';
     container.appendChild(card);
@@ -2995,3 +2995,5 @@ window.addEventListener('DOMContentLoaded', async () => {
   await runGoldenTestSuite();
 });
 
+
+function deleteCaseFromIndexedDb(caseId) { return removeCaseFromIndexedDb(caseId); }
